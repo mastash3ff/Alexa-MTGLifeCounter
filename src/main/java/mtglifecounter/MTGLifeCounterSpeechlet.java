@@ -14,12 +14,12 @@ import com.amazon.speech.speechlet.SpeechletException;
 import com.amazon.speech.speechlet.SpeechletResponse;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 
-public class ScoreKeeperSpeechlet implements Speechlet {
-    private static final Logger log = LoggerFactory.getLogger(ScoreKeeperSpeechlet.class);
+public class MTGLifeCounterSpeechlet implements Speechlet {
+    private static final Logger log = LoggerFactory.getLogger(MTGLifeCounterSpeechlet.class);
 
     private AmazonDynamoDBClient amazonDynamoDBClient;
 
-    private ScoreKeeperManager scoreKeeperManager;
+    private MtgLifeCounterManager scoreKeeperManager;
 
     private SkillContext skillContext;
 
@@ -97,7 +97,7 @@ public class ScoreKeeperSpeechlet implements Speechlet {
     private void initializeComponents() {
         if (amazonDynamoDBClient == null) {
             amazonDynamoDBClient = new AmazonDynamoDBClient();
-            scoreKeeperManager = new ScoreKeeperManager(amazonDynamoDBClient);
+            scoreKeeperManager = new MtgLifeCounterManager(amazonDynamoDBClient);
             skillContext = new SkillContext();
         }
     }

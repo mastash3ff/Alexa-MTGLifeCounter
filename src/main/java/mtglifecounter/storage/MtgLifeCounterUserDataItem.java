@@ -14,12 +14,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * skill.
  */
 @DynamoDBTable(tableName = "ScoreKeeperUserData")
-public class ScoreKeeperUserDataItem {
+public class MtgLifeCounterUserDataItem {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private String customerId;
 
-    private ScoreKeeperGameData gameData;
+    private MtgLifeCounterGameData gameData;
 
     @DynamoDBHashKey(attributeName = "CustomerId")
     public String getCustomerId() {
@@ -32,23 +32,23 @@ public class ScoreKeeperUserDataItem {
 
     @DynamoDBAttribute(attributeName = "Data")
     @DynamoDBMarshalling(marshallerClass = ScoreKeeperGameDataMarshaller.class)
-    public ScoreKeeperGameData getGameData() {
+    public MtgLifeCounterGameData getGameData() {
         return gameData;
     }
 
-    public void setGameData(ScoreKeeperGameData gameData) {
+    public void setGameData(MtgLifeCounterGameData gameData) {
         this.gameData = gameData;
     }
 
     /**
      * A {@link DynamoDBMarshaller} that provides marshalling and unmarshalling logic for
-     * {@link ScoreKeeperGameData} values so that they can be persisted in the database as String.
+     * {@link MtgLifeCounterGameData} values so that they can be persisted in the database as String.
      */
     public static class ScoreKeeperGameDataMarshaller implements
-            DynamoDBMarshaller<ScoreKeeperGameData> {
+            DynamoDBMarshaller<MtgLifeCounterGameData> {
 
         @Override
-        public String marshall(ScoreKeeperGameData gameData) {
+        public String marshall(MtgLifeCounterGameData gameData) {
             try {
                 return OBJECT_MAPPER.writeValueAsString(gameData);
             } catch (JsonProcessingException e) {
@@ -57,9 +57,9 @@ public class ScoreKeeperUserDataItem {
         }
 
         @Override
-        public ScoreKeeperGameData unmarshall(Class<ScoreKeeperGameData> clazz, String value) {
+        public MtgLifeCounterGameData unmarshall(Class<MtgLifeCounterGameData> clazz, String value) {
             try {
-                return OBJECT_MAPPER.readValue(value, new TypeReference<ScoreKeeperGameData>() {
+                return OBJECT_MAPPER.readValue(value, new TypeReference<MtgLifeCounterGameData>() {
                 });
             } catch (Exception e) {
                 throw new IllegalStateException("Unable to unmarshall game data value", e);

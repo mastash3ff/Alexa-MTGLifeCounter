@@ -6,10 +6,10 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 /**
  * Client for DynamoDB persistance layer for the Score Keeper skill.
  */
-public class ScoreKeeperDynamoDbClient {
+public class MtgLifeCounterDynamoDbClient {
     private final AmazonDynamoDBClient dynamoDBClient;
 
-    public ScoreKeeperDynamoDbClient(final AmazonDynamoDBClient dynamoDBClient) {
+    public MtgLifeCounterDynamoDbClient(final AmazonDynamoDBClient dynamoDBClient) {
         this.dynamoDBClient = dynamoDBClient;
     }
 
@@ -20,9 +20,9 @@ public class ScoreKeeperDynamoDbClient {
      * @param tableItem
      * @return
      */
-    public ScoreKeeperUserDataItem loadItem(final ScoreKeeperUserDataItem tableItem) {
+    public MtgLifeCounterUserDataItem loadItem(final MtgLifeCounterUserDataItem tableItem) {
         DynamoDBMapper mapper = createDynamoDBMapper();
-        ScoreKeeperUserDataItem item = mapper.load(tableItem);
+        MtgLifeCounterUserDataItem item = mapper.load(tableItem);
         return item;
     }
 
@@ -31,7 +31,7 @@ public class ScoreKeeperDynamoDbClient {
      * 
      * @param tableItem
      */
-    public void saveItem(final ScoreKeeperUserDataItem tableItem) {
+    public void saveItem(final MtgLifeCounterUserDataItem tableItem) {
         DynamoDBMapper mapper = createDynamoDBMapper();
         mapper.save(tableItem);
     }

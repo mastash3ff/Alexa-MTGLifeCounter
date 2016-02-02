@@ -5,23 +5,23 @@ import com.amazon.speech.speechlet.Session;
 /**
  * Contains the methods to interact with the persistence layer for ScoreKeeper in DynamoDB.
  */
-public class ScoreKeeperDao {
-    private final ScoreKeeperDynamoDbClient dynamoDbClient;
+public class MtgLifeCounterDao {
+    private final MtgLifeCounterDynamoDbClient dynamoDbClient;
 
-    public ScoreKeeperDao(ScoreKeeperDynamoDbClient dynamoDbClient) {
+    public MtgLifeCounterDao(MtgLifeCounterDynamoDbClient dynamoDbClient) {
         this.dynamoDbClient = dynamoDbClient;
     }
 
     /**
-     * Reads and returns the {@link ScoreKeeperGame} using user information from the session.
+     * Reads and returns the {@link MtgLifeCounterGame} using user information from the session.
      * <p>
      * Returns null if the item could not be found in the database.
      * 
      * @param session
      * @return
      */
-    public ScoreKeeperGame getScoreKeeperGame(Session session) {
-        ScoreKeeperUserDataItem item = new ScoreKeeperUserDataItem();
+    public MtgLifeCounterGame getScoreKeeperGame(Session session) {
+        MtgLifeCounterUserDataItem item = new MtgLifeCounterUserDataItem();
         item.setCustomerId(session.getUser().getUserId());
 
         item = dynamoDbClient.loadItem(item);
@@ -30,16 +30,16 @@ public class ScoreKeeperDao {
             return null;
         }
 
-        return ScoreKeeperGame.newInstance(session, item.getGameData());
+        return MtgLifeCounterGame.newInstance(session, item.getGameData());
     }
 
     /**
-     * Saves the {@link ScoreKeeperGame} into the database.
+     * Saves the {@link MtgLifeCounterGame} into the database.
      * 
      * @param game
      */
-    public void saveScoreKeeperGame(ScoreKeeperGame game) {
-        ScoreKeeperUserDataItem item = new ScoreKeeperUserDataItem();
+    public void saveScoreKeeperGame(MtgLifeCounterGame game) {
+        MtgLifeCounterUserDataItem item = new MtgLifeCounterUserDataItem();
         item.setCustomerId(game.getSession().getUser().getUserId());
         item.setGameData(game.getGameData());
 

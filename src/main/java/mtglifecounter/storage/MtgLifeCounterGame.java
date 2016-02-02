@@ -11,27 +11,27 @@ import com.amazon.speech.speechlet.Session;
 /**
  * Represents a score keeper game.
  */
-public final class ScoreKeeperGame {
+public final class MtgLifeCounterGame {
     private Session session;
-    private ScoreKeeperGameData gameData;
+    private MtgLifeCounterGameData gameData;
 
-    private ScoreKeeperGame() {
+    private MtgLifeCounterGame() {
     }
 
     /**
-     * Creates a new instance of {@link ScoreKeeperGame} with the provided {@link Session} and
-     * {@link ScoreKeeperGameData}.
+     * Creates a new instance of {@link MtgLifeCounterGame} with the provided {@link Session} and
+     * {@link MtgLifeCounterGameData}.
      * <p>
-     * To create a new instance of {@link ScoreKeeperGameData}, see
-     * {@link ScoreKeeperGameData#newInstance()}
+     * To create a new instance of {@link MtgLifeCounterGameData}, see
+     * {@link MtgLifeCounterGameData#newInstance()}
      * 
      * @param session
      * @param gameData
      * @return
-     * @see ScoreKeeperGameData#newInstance()
+     * @see MtgLifeCounterGameData#newInstance()
      */
-    public static ScoreKeeperGame newInstance(Session session, ScoreKeeperGameData gameData) {
-        ScoreKeeperGame game = new ScoreKeeperGame();
+    public static MtgLifeCounterGame newInstance(Session session, MtgLifeCounterGameData gameData) {
+        MtgLifeCounterGame game = new MtgLifeCounterGame();
         game.setSession(session);
         game.setGameData(gameData);
         return game;
@@ -45,11 +45,11 @@ public final class ScoreKeeperGame {
         return session;
     }
 
-    protected ScoreKeeperGameData getGameData() {
+    protected MtgLifeCounterGameData getGameData() {
         return gameData;
     }
 
-    protected void setGameData(ScoreKeeperGameData gameData) {
+    protected void setGameData(MtgLifeCounterGameData gameData) {
         this.gameData = gameData;
     }
 
