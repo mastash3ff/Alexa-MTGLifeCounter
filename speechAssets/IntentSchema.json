@@ -1,0 +1,24 @@
+{
+"intents": [
+{
+"intent": "GetUpEventIntent",
+"slots": [
+{
+"name":"number",
+"type":"AMAZON.NUMBER"
+}
+]
+},
+{
+"intent": "GetDownEventIntent",
+"slots": [
+{
+"name":"number",
+"type":"AMAZON.NUMBER"
+}
+]
+},
+{
+"intent": "AMAZON.HelpIntent"
+},
+}
