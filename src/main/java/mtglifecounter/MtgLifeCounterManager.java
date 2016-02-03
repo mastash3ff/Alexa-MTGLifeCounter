@@ -98,7 +98,7 @@ public class MtgLifeCounterManager {
         }
 
         // Reset current game
-        game.resetScores();
+        game.resetScores(20); //default is 20
         scoreKeeperDao.saveScoreKeeperGame(game);
 
         String speechText =
@@ -416,4 +416,63 @@ public class MtgLifeCounterManager {
         card.setContent(leaderboard.toString());
         return card;
     }
+
+    /**
+     * Creates and returns response for the subtract score intent.
+     *
+     * @param intent
+     *            {@link Intent} for this request
+     * @param session
+     *            {@link Session} for this request
+     * @param skillContext
+     *            {@link SkillContext} for this request
+     * @return response for the add score intent
+     */
+	public SpeechletResponse getSubScoreIntentResponse(Intent intent, Session session, SkillContext skillContext) {
+        String playerName =
+                MtgLifeCounterTextUtil.getPlayerName(intent.getSlot(SLOT_PLAYER_NAME).getValue());
+        if (playerName == null) {
+            String speechText = "Sorry, I did not hear the player name. Please say again?";
+            return getAskSpeechletResponse(speechText, speechText);
+        }
+
+        int score = 0;
+        try {
+            score = Integer.parseInt(intent.getSlot(SLOT_SCORE_NUMBER).getValue());
+        } catch (NumberFormatException e) {
+            String speechText = "Sorry, I did not hear the points. Please say again?";
+            return getAskSpeechletResponse(speechText, speechText);
+        }
+
+        MtgLifeCounterGame game = scoreKeeperDao.getScoreKeeperGame(session);
+        if (game == null) {
+            return getTellSpeechletResponse("A game has not been started. Please say New Game to "
+                    + "start a new game before adding scores.");
+        }
+
+        if (game.getNumberOfPlayers() == 0) {
+            String speechText = "Sorry, no player has joined the game yet. What can I do for you?";
+            return getAskSpeechletResponse(speechText, speechText);
+        }
+
+        // Update score
+        if (!game.addScoreForPlayer(playerName, score)) {
+            String speechText = "Sorry, " + playerName + " has not joined the game. What else?";
+            return getAskSpeechletResponse(speechText, speechText);
+        }
+
+        // Save game
+        scoreKeeperDao.saveScoreKeeperGame(game);
+
+        // Prepare speech text. If the game has less than 3 players, skip reading scores for each
+        // player for brevity.
+        String speechText = score + " for " + playerName + ". ";
+        if (game.getNumberOfPlayers() > MAX_PLAYERS_FOR_SPEECH) {
+            speechText += playerName + " has " + game.getScoreForPlayer(playerName) + " in total.";
+        } else {
+            speechText += getAllScoresAsSpeechText(game.getAllScoresInDescndingOrder());
+        }
+
+        return getTellSpeechletResponse(speechText);
+	}
 }

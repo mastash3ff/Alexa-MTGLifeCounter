@@ -144,6 +144,12 @@ public final class MtgLifeCounterGame {
             gameData.getScores().put(playerName, Long.valueOf(0L));
         }
     }
+    
+    public void resetScores(Integer score){
+        for (String playerName : gameData.getPlayers()) {
+            gameData.getScores().put(playerName, Long.valueOf(score));
+        }
+    }
 
     /**
      * Returns a {@link SortedMap} of player names mapped to scores with the map sorted in

@@ -442,3 +442,19 @@ AddScoreIntent {ScoreNumber} for {PlayerName}
 AddScoreIntent give {PlayerName} {ScoreNumber} more points
 AddScoreIntent {ScoreNumber} more points for {PlayerName}
 AddScoreIntent {ScoreNumber} points for {PlayerName}
+
+SubScoreIntent lose {PlayerName} {ScoreNumber}
+SubScoreIntent take {PlayerName} {ScoreNumber}
+SubScoreIntent remove {PlayerName} {ScoreNumber}
+SubScoreIntent strip {PlayerName} {ScoreNumber}
+SubScoreIntent remove {ScoreNumber} points from {PlayerName}
+SubScoreIntent strip {ScoreNumber} points from {PlayerName}
+SubScoreIntent {ScoreNumber} from {PlayerName}
+SubScoreIntent give {PlayerName} {ScoreNumber} more points
+SubScoreIntent {ScoreNumber} less points for {PlayerName}
+SubScoreIntent {ScoreNumber} less for {PlayerName}
+SubScoreIntent subtract {ScoreNumber} points for {PlayerName}
+SubScoreIntent sub {ScoreNumber} points for {PlayerName}
+SubScoreIntent take {ScoreNumber} points from {PlayerName}
+SubScoreIntent take {ScoreNumber} from {PlayerName}
+SubScoreIntent take {ScoreNumber} away from {PlayerName}

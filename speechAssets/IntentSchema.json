@@ -22,6 +22,19 @@
         }
       ]
     },
+     {
+      "intent": "SubScoreIntent",
+      "slots": [
+        {
+          "name": "PlayerName",
+          "type": "LIST_OF_PLAYER_NAMES"
+        },
+        {
+          "name": "ScoreNumber",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
     {
       "intent": "ResetPlayersIntent"
     },

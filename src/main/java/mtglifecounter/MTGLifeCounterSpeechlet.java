@@ -15,90 +15,117 @@ import com.amazon.speech.speechlet.SpeechletResponse;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 
 public class MTGLifeCounterSpeechlet implements Speechlet {
-    private static final Logger log = LoggerFactory.getLogger(MTGLifeCounterSpeechlet.class);
 
-    private AmazonDynamoDBClient amazonDynamoDBClient;
+	private static final Logger log = LoggerFactory.getLogger(MTGLifeCounterSpeechlet.class);
+	private AmazonDynamoDBClient amazonDynamoDBClient;
+	private MtgLifeCounterManager scoreKeeperManager;
+	private SkillContext skillContext;
 
-    private MtgLifeCounterManager scoreKeeperManager;
+	@Override
+	public void onSessionStarted(final SessionStartedRequest request, final Session session)
+			throws SpeechletException {
+		log.info("onSessionStarted requestId={}, sessionId={}", request.getRequestId(),
+				session.getSessionId());
 
-    private SkillContext skillContext;
+		initializeComponents(); //init db, manager, and context
 
-    @Override
-    public void onSessionStarted(final SessionStartedRequest request, final Session session)
-            throws SpeechletException {
-        log.info("onSessionStarted requestId={}, sessionId={}", request.getRequestId(),
-                session.getSessionId());
+		// if user said a one shot command that triggered an intent event,
+		// it will start a new session, and then we should avoid speaking too many words.
+		skillContext.setNeedsMoreHelp(false);
+	}
 
-        initializeComponents();
+	@Override
+	public SpeechletResponse onLaunch(final LaunchRequest request, final Session session)
+			throws SpeechletException {
+		log.info("onLaunch requestId={}, sessionId={}", request.getRequestId(),
+				session.getSessionId());
 
-        // if user said a one shot command that triggered an intent event,
-        // it will start a new session, and then we should avoid speaking too many words.
-        skillContext.setNeedsMoreHelp(false);
-    }
+		skillContext.setNeedsMoreHelp(true);
+		return scoreKeeperManager.getLaunchResponse(request, session);
+	}
 
-    @Override
-    public SpeechletResponse onLaunch(final LaunchRequest request, final Session session)
-            throws SpeechletException {
-        log.info("onLaunch requestId={}, sessionId={}", request.getRequestId(),
-                session.getSessionId());
+	@Override
+	public SpeechletResponse onIntent(IntentRequest request, Session session)
+			throws SpeechletException {
+		log.info("onIntent requestId={}, sessionId={}", request.getRequestId(),
+				session.getSessionId());
+		initializeComponents();
 
-        skillContext.setNeedsMoreHelp(true);
-        return scoreKeeperManager.getLaunchResponse(request, session);
-    }
+		Intent intent = request.getIntent();
+		switch (intent.getName()) {
+		case "NewGameIntent":
+			return scoreKeeperManager.getNewGameIntentResponse(session, skillContext);
+		case "AddPlayerIntent":
+			return scoreKeeperManager.getAddPlayerIntentResponse(intent, session, skillContext);
+		case "AddScoreIntent":
+			return scoreKeeperManager.getAddScoreIntentResponse(intent, session, skillContext);
+		case "SubScoreIntent":
+			return scoreKeeperManager.getSubScoreIntentResponse(intent, session, skillContext);
+		case "TellScoresIntent":
+			return scoreKeeperManager.getTellScoresIntentResponse(intent, session);
+		case "ResetPlayersIntent":
+			return scoreKeeperManager.getResetPlayersIntentResponse(intent, session);
+		case "AMAZON.HelpIntent":
+			return scoreKeeperManager.getHelpIntentResponse(intent, session, skillContext);
+		case "AMAZON.CancelIntent":
+			return scoreKeeperManager.getExitIntentResponse(intent, session, skillContext);
+		case "AMAZON.StopIntent":
+			return scoreKeeperManager.getExitIntentResponse(intent, session, skillContext);
+		default:
+			throw new IllegalArgumentException("Unrecognized intent: " + intent.getName());
+		}
 
-    @Override
-    public SpeechletResponse onIntent(IntentRequest request, Session session)
-            throws SpeechletException {
-        log.info("onIntent requestId={}, sessionId={}", request.getRequestId(),
-                session.getSessionId());
-        initializeComponents();
+		/*
+		if ("NewGameIntent".equals(intent.getName())) {
+			return scoreKeeperManager.getNewGameIntentResponse(session, skillContext);
 
-        Intent intent = request.getIntent();
-        if ("NewGameIntent".equals(intent.getName())) {
-            return scoreKeeperManager.getNewGameIntentResponse(session, skillContext);
+		} else if ("AddPlayerIntent".equals(intent.getName())) {
+			return scoreKeeperManager.getAddPlayerIntentResponse(intent, session, skillContext);
 
-        } else if ("AddPlayerIntent".equals(intent.getName())) {
-            return scoreKeeperManager.getAddPlayerIntentResponse(intent, session, skillContext);
+		} else if ("AddScoreIntent".equals(intent.getName())) {
+			return scoreKeeperManager.getAddScoreIntentResponse(intent, session, skillContext);
+		} 
+		else if ("SubScoreIntent".equals(intent.getName())) {
+			return scoreKeeperManager.getSubScoreIntentResponse(intent, session, skillContext);
+		} 
+		else if ("TellScoresIntent".equals(intent.getName())) {
+			return scoreKeeperManager.getTellScoresIntentResponse(intent, session);
 
-        } else if ("AddScoreIntent".equals(intent.getName())) {
-            return scoreKeeperManager.getAddScoreIntentResponse(intent, session, skillContext);
+		} else if ("ResetPlayersIntent".equals(intent.getName())) {
+			return scoreKeeperManager.getResetPlayersIntentResponse(intent, session);
 
-        } else if ("TellScoresIntent".equals(intent.getName())) {
-            return scoreKeeperManager.getTellScoresIntentResponse(intent, session);
+		} else if ("AMAZON.HelpIntent".equals(intent.getName())) {
+			return scoreKeeperManager.getHelpIntentResponse(intent, session, skillContext);
 
-        } else if ("ResetPlayersIntent".equals(intent.getName())) {
-            return scoreKeeperManager.getResetPlayersIntentResponse(intent, session);
+		} else if ("AMAZON.CancelIntent".equals(intent.getName())) {
+			return scoreKeeperManager.getExitIntentResponse(intent, session, skillContext);
 
-        } else if ("AMAZON.HelpIntent".equals(intent.getName())) {
-            return scoreKeeperManager.getHelpIntentResponse(intent, session, skillContext);
+		} else if ("AMAZON.StopIntent".equals(intent.getName())) {
+			return scoreKeeperManager.getExitIntentResponse(intent, session, skillContext);
 
-        } else if ("AMAZON.CancelIntent".equals(intent.getName())) {
-            return scoreKeeperManager.getExitIntentResponse(intent, session, skillContext);
+		} else {
+			throw new IllegalArgumentException("Unrecognized intent: " + intent.getName());
+		}
+		 */
 
-        } else if ("AMAZON.StopIntent".equals(intent.getName())) {
-            return scoreKeeperManager.getExitIntentResponse(intent, session, skillContext);
+	}
 
-        } else {
-            throw new IllegalArgumentException("Unrecognized intent: " + intent.getName());
-        }
-    }
+	@Override
+	public void onSessionEnded(final SessionEndedRequest request, final Session session)
+			throws SpeechletException {
+		log.info("onSessionEnded requestId={}, sessionId={}", request.getRequestId(),
+				session.getSessionId());
+		// any cleanup logic goes here
+	}
 
-    @Override
-    public void onSessionEnded(final SessionEndedRequest request, final Session session)
-            throws SpeechletException {
-        log.info("onSessionEnded requestId={}, sessionId={}", request.getRequestId(),
-                session.getSessionId());
-        // any cleanup logic goes here
-    }
-
-    /**
-     * Initializes the instance components if needed.
-     */
-    private void initializeComponents() {
-        if (amazonDynamoDBClient == null) {
-            amazonDynamoDBClient = new AmazonDynamoDBClient();
-            scoreKeeperManager = new MtgLifeCounterManager(amazonDynamoDBClient);
-            skillContext = new SkillContext();
-        }
-    }
+	/**
+	 * Initializes the instance components if needed.
+	 */
+	private void initializeComponents() {
+		if (amazonDynamoDBClient == null) {
+			amazonDynamoDBClient = new AmazonDynamoDBClient();
+			scoreKeeperManager = new MtgLifeCounterManager(amazonDynamoDBClient);
+			skillContext = new SkillContext();
+		}
+	}
 }
