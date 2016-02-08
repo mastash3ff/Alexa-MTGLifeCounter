@@ -23,32 +23,17 @@
  *******************************************************************************/
 package mtglifecounter;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import com.amazon.speech.speechlet.lambda.SpeechletRequestStreamHandler;
-
 /**
- * This class could be the handler for an AWS Lambda function powering an Alexa Skills Kit
- * experience. To do this, simply set the handler field in the AWS Lambda console to
- * "scorekeeper.ScoreKeeperSpeechletRequestStreamHandler" For this to work, you'll also need to
- * build this project using the {@code lambda-compile} Ant task and upload the resulting zip file to
- * power your function.
+ * Contains session scoped settings.
  */
-public final class MtgLifeCounterSpeechletRequestStreamHandler extends SpeechletRequestStreamHandler {
-    private static final Set<String> supportedApplicationIds;
+public class MtgLifeCounterSkillContext {
+    private boolean needsMoreHelp = true;
 
-    static {
-        /*
-         * This Id can be found on https://developer.amazon.com/edw/home.html#/ "Edit" the relevant
-         * Alexa Skill and put the relevant Application Ids in this Set.
-         */
-        supportedApplicationIds = new HashSet<String>();
-        // supportedApplicationIds.add("amzn1.echo-sdk-ams.app.[unique-value-here]");
-        supportedApplicationIds.add("amzn1.echo-sdk-ams.app.c92b8a78-da3c-4b70-84c3-afbc65333da7");
+    public boolean needsMoreHelp() {
+        return needsMoreHelp;
     }
 
-    public MtgLifeCounterSpeechletRequestStreamHandler() {
-        super(new MTGLifeCounterSpeechlet(), supportedApplicationIds);
+    public void setNeedsMoreHelp(boolean needsMoreHelp) {
+        this.needsMoreHelp = needsMoreHelp;
     }
 }

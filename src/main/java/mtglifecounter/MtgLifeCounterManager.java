@@ -1,3 +1,26 @@
+/*******************************************************************************
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2016 Brandon Sheffield
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *******************************************************************************/
 package mtglifecounter;
 
 import java.util.Map;
@@ -60,20 +83,20 @@ public class MtgLifeCounterManager {
         // Speak welcome message and ask user questions
         // based on whether there are players or not.
         String speechText, repromptText;
-        MtgLifeCounterGame game = scoreKeeperDao.getScoreKeeperGame(session);
+        MtgLifeCounterGame game = scoreKeeperDao.getMTGLifeCounterGame(session);
 
         if (game == null || !game.hasPlayers()) {
-            speechText = "ScoreKeeper, Let's start your game. Who's your first player?";
+            speechText = "MTGLifeCounter, Let's start your game. Who's your first player?";
             repromptText = "Please tell me who is your first player?";
         } else if (!game.hasScores()) {
             speechText =
-                    "ScoreKeeper, you have " + game.getNumberOfPlayers()
+                    "MTGLifeCounter, you have " + game.getNumberOfPlayers()
                             + (game.getNumberOfPlayers() == 1 ? " player" : " players")
                             + " in the game. You can give a player points, add another player,"
                             + " reset all players or exit. Which would you like?";
             repromptText = MtgLifeCounterTextUtil.COMPLETE_HELP;
         } else {
-            speechText = "ScoreKeeper, What can I do for you?";
+            speechText = "MTGLifeCounter, What can I do for you?";
             repromptText = MtgLifeCounterTextUtil.NEXT_HELP;
         }
 
@@ -86,11 +109,11 @@ public class MtgLifeCounterManager {
      * @param session
      *            {@link Session} for the request
      * @param skillContext
-     *            {@link SkillContext} for this request
+     *            {@link MtgLifeCounterSkillContext} for this request
      * @return response for the new game intent.
      */
-    public SpeechletResponse getNewGameIntentResponse(Session session, SkillContext skillContext) {
-        MtgLifeCounterGame game = scoreKeeperDao.getScoreKeeperGame(session);
+    public SpeechletResponse getNewGameIntentResponse(Session session, MtgLifeCounterSkillContext skillContext) {
+        MtgLifeCounterGame game = scoreKeeperDao.getMTGLifeCounterGame(session);
 
         if (game == null) {
             return getAskSpeechletResponse("New game started. Who's your first player?",
@@ -99,7 +122,7 @@ public class MtgLifeCounterManager {
 
         // Reset current game
         game.resetScores(20); //default is 20
-        scoreKeeperDao.saveScoreKeeperGame(game);
+        scoreKeeperDao.saveMTGLifeCounterGame(game);
 
         String speechText =
                 "New game started with " + game.getNumberOfPlayers() + " existing player"
@@ -127,7 +150,7 @@ public class MtgLifeCounterManager {
      * @return response for the add player intent.
      */
     public SpeechletResponse getAddPlayerIntentResponse(Intent intent, Session session,
-            SkillContext skillContext) {
+            MtgLifeCounterSkillContext skillContext) {
         // add a player to the current game,
         // terminate or continue the conversation based on whether the intent
         // is from a one shot command or not.
@@ -139,7 +162,7 @@ public class MtgLifeCounterManager {
         }
 
         // Load the previous game
-        MtgLifeCounterGame game = scoreKeeperDao.getScoreKeeperGame(session);
+        MtgLifeCounterGame game = scoreKeeperDao.getMTGLifeCounterGame(session);
         if (game == null) {
             game = MtgLifeCounterGame.newInstance(session, MtgLifeCounterGameData.newInstance());
         }
@@ -147,7 +170,7 @@ public class MtgLifeCounterManager {
         game.addPlayer(newPlayerName);
 
         // Save the updated game
-        scoreKeeperDao.saveScoreKeeperGame(game);
+        scoreKeeperDao.saveMTGLifeCounterGame(game);
 
         String speechText = newPlayerName + " has joined your game. ";
         String repromptText = null;
@@ -177,11 +200,11 @@ public class MtgLifeCounterManager {
      * @param session
      *            {@link Session} for this request
      * @param skillContext
-     *            {@link SkillContext} for this request
+     *            {@link MtgLifeCounterSkillContext} for this request
      * @return response for the add score intent
      */
     public SpeechletResponse getAddScoreIntentResponse(Intent intent, Session session,
-            SkillContext skillContext) {
+            MtgLifeCounterSkillContext skillContext) {
         String playerName =
                 MtgLifeCounterTextUtil.getPlayerName(intent.getSlot(SLOT_PLAYER_NAME).getValue());
         if (playerName == null) {
@@ -197,7 +220,7 @@ public class MtgLifeCounterManager {
             return getAskSpeechletResponse(speechText, speechText);
         }
 
-        MtgLifeCounterGame game = scoreKeeperDao.getScoreKeeperGame(session);
+        MtgLifeCounterGame game = scoreKeeperDao.getMTGLifeCounterGame(session);
         if (game == null) {
             return getTellSpeechletResponse("A game has not been started. Please say New Game to "
                     + "start a new game before adding scores.");
@@ -215,7 +238,7 @@ public class MtgLifeCounterManager {
         }
 
         // Save game
-        scoreKeeperDao.saveScoreKeeperGame(game);
+        scoreKeeperDao.saveMTGLifeCounterGame(game);
 
         // Prepare speech text. If the game has less than 3 players, skip reading scores for each
         // player for brevity.
@@ -240,7 +263,7 @@ public class MtgLifeCounterManager {
      */
     public SpeechletResponse getTellScoresIntentResponse(Intent intent, Session session) {
         // tells the scores in the leaderboard and send the result in card.
-        MtgLifeCounterGame game = scoreKeeperDao.getScoreKeeperGame(session);
+        MtgLifeCounterGame game = scoreKeeperDao.getMTGLifeCounterGame(session);
 
         if (game == null || !game.hasPlayers()) {
             return getTellSpeechletResponse("Nobody has joined the game.");
@@ -269,7 +292,7 @@ public class MtgLifeCounterManager {
         // Remove all players
         MtgLifeCounterGame game =
                 MtgLifeCounterGame.newInstance(session, MtgLifeCounterGameData.newInstance());
-        scoreKeeperDao.saveScoreKeeperGame(game);
+        scoreKeeperDao.saveMTGLifeCounterGame(game);
 
         String speechText = "New game started without players. Who do you want to add first?";
         return getAskSpeechletResponse(speechText, speechText);
@@ -283,11 +306,11 @@ public class MtgLifeCounterManager {
      * @param session
      *            {@link Session} for this request
      * @param skillContext
-     *            {@link SkillContext} for this request
+     *            {@link MtgLifeCounterSkillContext} for this request
      * @return response for the help intent
      */
     public SpeechletResponse getHelpIntentResponse(Intent intent, Session session,
-            SkillContext skillContext) {
+            MtgLifeCounterSkillContext skillContext) {
         return skillContext.needsMoreHelp() ? getAskSpeechletResponse(
                 MtgLifeCounterTextUtil.COMPLETE_HELP + " So, how can I help?",
                 MtgLifeCounterTextUtil.NEXT_HELP)
@@ -302,11 +325,11 @@ public class MtgLifeCounterManager {
      * @param session
      *            {@link Session} for this request
      * @param skillContext
-     *            {@link SkillContext} for this request
+     *            {@link MtgLifeCounterSkillContext} for this request
      * @return response for the exit intent
      */
     public SpeechletResponse getExitIntentResponse(Intent intent, Session session,
-            SkillContext skillContext) {
+            MtgLifeCounterSkillContext skillContext) {
         return skillContext.needsMoreHelp() ? getTellSpeechletResponse("Okay. Whenever you're "
                 + "ready, you can start giving points to the players in your game.")
                 : getTellSpeechletResponse("");
@@ -425,10 +448,10 @@ public class MtgLifeCounterManager {
      * @param session
      *            {@link Session} for this request
      * @param skillContext
-     *            {@link SkillContext} for this request
+     *            {@link MtgLifeCounterSkillContext} for this request
      * @return response for the add score intent
      */
-	public SpeechletResponse getSubScoreIntentResponse(Intent intent, Session session, SkillContext skillContext) {
+	public SpeechletResponse getSubScoreIntentResponse(Intent intent, Session session, MtgLifeCounterSkillContext skillContext) {
         String playerName =
                 MtgLifeCounterTextUtil.getPlayerName(intent.getSlot(SLOT_PLAYER_NAME).getValue());
         if (playerName == null) {
@@ -444,10 +467,10 @@ public class MtgLifeCounterManager {
             return getAskSpeechletResponse(speechText, speechText);
         }
 
-        MtgLifeCounterGame game = scoreKeeperDao.getScoreKeeperGame(session);
+        MtgLifeCounterGame game = scoreKeeperDao.getMTGLifeCounterGame(session);
         if (game == null) {
             return getTellSpeechletResponse("A game has not been started. Please say New Game to "
-                    + "start a new game before adding scores.");
+                    + "start a new game before subtracting scores.");
         }
 
         if (game.getNumberOfPlayers() == 0) {
@@ -455,18 +478,33 @@ public class MtgLifeCounterManager {
             return getAskSpeechletResponse(speechText, speechText);
         }
 
-        // Update score
-        if (!game.addScoreForPlayer(playerName, score)) {
+        // Update scores by subtracting
+        if (!game.subtractScoreForPlayer(playerName, score)) {
             String speechText = "Sorry, " + playerName + " has not joined the game. What else?";
             return getAskSpeechletResponse(speechText, speechText);
         }
-
+        
         // Save game
-        scoreKeeperDao.saveScoreKeeperGame(game);
+        scoreKeeperDao.saveMTGLifeCounterGame(game);
+        
+        //check for winner & loser
+        if (game.didPlayerLose(playerName,score)){
+        	//if that player is at <= 0 life total.
+        	//TODO implement multiple player logic.  Currently supports one.
+        	
+        	SortedMap<String, Long> allScoresInDescndingOrder = game.getAllScoresInDescndingOrder();
+        	allScoresInDescndingOrder.remove(playerName); //remove player from collection of players
+        	
+        	if (allScoresInDescndingOrder.size() == 1){
+        		String lastPlayer = allScoresInDescndingOrder.lastKey();
+        		String speechText = "Player " + lastPlayer + " has won the game!";
+        		return getTellSpeechletResponse(speechText);
+        	}
+        }
 
         // Prepare speech text. If the game has less than 3 players, skip reading scores for each
         // player for brevity.
-        String speechText = score + " for " + playerName + ". ";
+        String speechText = score + " from " + playerName + ". ";
         if (game.getNumberOfPlayers() > MAX_PLAYERS_FOR_SPEECH) {
             speechText += playerName + " has " + game.getScoreForPlayer(playerName) + " in total.";
         } else {

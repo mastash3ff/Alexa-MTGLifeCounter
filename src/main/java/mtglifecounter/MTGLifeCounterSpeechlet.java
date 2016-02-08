@@ -1,8 +1,30 @@
+/*******************************************************************************
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2016 Brandon Sheffield
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *******************************************************************************/
 package mtglifecounter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.amazon.speech.slu.Intent;
 import com.amazon.speech.speechlet.IntentRequest;
 import com.amazon.speech.speechlet.LaunchRequest;
@@ -19,7 +41,7 @@ public class MTGLifeCounterSpeechlet implements Speechlet {
 	private static final Logger log = LoggerFactory.getLogger(MTGLifeCounterSpeechlet.class);
 	private AmazonDynamoDBClient amazonDynamoDBClient;
 	private MtgLifeCounterManager scoreKeeperManager;
-	private SkillContext skillContext;
+	private MtgLifeCounterSkillContext skillContext;
 
 	@Override
 	public void onSessionStarted(final SessionStartedRequest request, final Session session)
@@ -74,40 +96,6 @@ public class MTGLifeCounterSpeechlet implements Speechlet {
 		default:
 			throw new IllegalArgumentException("Unrecognized intent: " + intent.getName());
 		}
-
-		/*
-		if ("NewGameIntent".equals(intent.getName())) {
-			return scoreKeeperManager.getNewGameIntentResponse(session, skillContext);
-
-		} else if ("AddPlayerIntent".equals(intent.getName())) {
-			return scoreKeeperManager.getAddPlayerIntentResponse(intent, session, skillContext);
-
-		} else if ("AddScoreIntent".equals(intent.getName())) {
-			return scoreKeeperManager.getAddScoreIntentResponse(intent, session, skillContext);
-		} 
-		else if ("SubScoreIntent".equals(intent.getName())) {
-			return scoreKeeperManager.getSubScoreIntentResponse(intent, session, skillContext);
-		} 
-		else if ("TellScoresIntent".equals(intent.getName())) {
-			return scoreKeeperManager.getTellScoresIntentResponse(intent, session);
-
-		} else if ("ResetPlayersIntent".equals(intent.getName())) {
-			return scoreKeeperManager.getResetPlayersIntentResponse(intent, session);
-
-		} else if ("AMAZON.HelpIntent".equals(intent.getName())) {
-			return scoreKeeperManager.getHelpIntentResponse(intent, session, skillContext);
-
-		} else if ("AMAZON.CancelIntent".equals(intent.getName())) {
-			return scoreKeeperManager.getExitIntentResponse(intent, session, skillContext);
-
-		} else if ("AMAZON.StopIntent".equals(intent.getName())) {
-			return scoreKeeperManager.getExitIntentResponse(intent, session, skillContext);
-
-		} else {
-			throw new IllegalArgumentException("Unrecognized intent: " + intent.getName());
-		}
-		 */
-
 	}
 
 	@Override
@@ -125,7 +113,7 @@ public class MTGLifeCounterSpeechlet implements Speechlet {
 		if (amazonDynamoDBClient == null) {
 			amazonDynamoDBClient = new AmazonDynamoDBClient();
 			scoreKeeperManager = new MtgLifeCounterManager(amazonDynamoDBClient);
-			skillContext = new SkillContext();
+			skillContext = new MtgLifeCounterSkillContext();
 		}
 	}
 }

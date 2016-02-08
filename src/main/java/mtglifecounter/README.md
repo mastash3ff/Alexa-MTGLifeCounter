@@ -38,7 +38,7 @@ To run this example skill you need to do two things. The first is to deploy the 
 
 ### Alexa Skill Setup
 1. Go to the [Alexa Console](https://developer.amazon.com/edw/home.html) and click Add a New Skill.
-2. Set "ScoreKeeper" as the skill name and "score keeper" as the invocation name, this is what is used to activate your skill. For example you would say: "Alexa, Ask score keeper for the current score."
+2. Set "ScoreKeeper" as the skill name and "life counter" as the invocation name, this is what is used to activate your skill. For example you would say: "Alexa, Ask life counter for the current score."
 3. Select the Lambda ARN for the skill Endpoint and paste the ARN copied from above. Click Next.
 4. Copy the custom slot types from the customSlotTypes folder. Each file in the folder represents a new custom slot type. The name of the file is the name of the custom slot type, and the values in the file are the values for the custom slot.
 5. Copy the Intent Schema from the included IntentSchema.json.
@@ -51,20 +51,20 @@ To run this example skill you need to do two things. The first is to deploy the 
 
 ## Examples
 ### Dialog model:
-    User: "Alexa, tell score keeper to reset."
+    User: "Alexa, tell life counter to reset."
     Alexa: "New game started without players. Who do you want to add first?"
-    User: "Add the player Bob"
-    Alexa: "Bob has joined your game"
-    User: "Add player Jeff"
-    Alexa: "Jeff has joined your game"
+    User: "Add the player Talor"
+    Alexa: "Talor has joined your game"
+    User: "Add player Brandon"
+    Alexa: "Brandon has joined your game"
 
     (skill saves the new game and ends)
 
-    User: "Alexa, tell score keeper to give Bob three points."
-    Alexa: "Updating your score, three points for Bob"
+    User: "Alexa, tell life counter to give Talor three points."
+    Alexa: "Updating your score, three points for Talor"
 
     (skill saves the latest score and ends)
 
 ### One-shot model:
-    User: "Alexa, ask score keeper what's the current score?"
-    Alexa: "Jeff has zero points and Bob has three"
+    User: "Alexa, ask life counter what's the current score?"
+    Alexa: "Brandon has twenty points and Talor has twenty-three"

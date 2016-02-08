@@ -448,6 +448,7 @@ SubScoreIntent take {PlayerName} {ScoreNumber}
 SubScoreIntent remove {PlayerName} {ScoreNumber}
 SubScoreIntent strip {PlayerName} {ScoreNumber}
 SubScoreIntent remove {ScoreNumber} points from {PlayerName}
+SubScoreIntent remove {ScoreNumber} {PlayerName}
 SubScoreIntent strip {ScoreNumber} points from {PlayerName}
 SubScoreIntent {ScoreNumber} from {PlayerName}
 SubScoreIntent give {PlayerName} {ScoreNumber} more points

@@ -1,3 +1,26 @@
+/*******************************************************************************
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2016 Brandon Sheffield
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *******************************************************************************/
 package mtglifecounter.storage;
 
 import java.io.Serializable;
@@ -134,6 +157,48 @@ public final class MtgLifeCounterGame {
 
         gameData.getScores().put(playerName, Long.valueOf(currentScore + score));
         return true;
+    }
+    
+    /**
+     * Subtracts the score passed to it to the current score for a player. Returns true if the player
+     * existed, false otherwise.
+     * 
+     * @param playerName
+     *            Name of the player
+     * @param score
+     *            score to be added
+     * @return true if the player existed, false otherwise.
+     */
+    public boolean subtractScoreForPlayer(String playerName, long score) {
+        if (!hasPlayer(playerName)) {
+            return false;
+        }
+
+        long currentScore = 0L;
+        if (gameData.getScores().containsKey(playerName)) {
+            currentScore = gameData.getScores().get(playerName);
+        }
+
+        gameData.getScores().put(playerName, Long.valueOf(currentScore - score));
+
+        return true;
+    }
+    
+    public boolean didPlayerLose(String playerName, long score){
+        if (!hasPlayer(playerName)) {
+            return false;
+        }
+
+        long currentScore = 0L;
+        if (gameData.getScores().containsKey(playerName)) {
+            currentScore = gameData.getScores().get(playerName);
+        }
+        
+        if (currentScore <= 0){
+        	return true;
+        }
+
+        return false;
     }
 
     /**
