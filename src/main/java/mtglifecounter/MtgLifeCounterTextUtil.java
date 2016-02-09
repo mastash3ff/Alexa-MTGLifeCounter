@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Util containing various text related utils.
+ * Utililty class containing helpers for manipulating and handling text.
  */
 public final class MtgLifeCounterTextUtil {
 
@@ -43,7 +43,7 @@ public final class MtgLifeCounterTextUtil {
      * Text of complete help.
      */
     public static final String COMPLETE_HELP =
-            "Here's some things you can say. Add John, give John 5 points, tell me the score, "
+            "Here's some things you can say. Add Brandon, take Brandon 5 points, tell me the score, "
                     + "new game, reset, and exit.";
 
     /**

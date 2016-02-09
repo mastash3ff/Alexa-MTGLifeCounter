@@ -44,7 +44,7 @@ public final class MtgLifeCounterSpeechletRequestStreamHandler extends Speechlet
          * Alexa Skill and put the relevant Application Ids in this Set.
          */
         supportedApplicationIds = new HashSet<String>();
-        // supportedApplicationIds.add("amzn1.echo-sdk-ams.app.[unique-value-here]");
+        //MTG Life Counter App Id
         supportedApplicationIds.add("amzn1.echo-sdk-ams.app.c92b8a78-da3c-4b70-84c3-afbc65333da7");
     }
 

@@ -37,10 +37,10 @@ import com.amazon.speech.ui.Reprompt;
 import com.amazon.speech.ui.SimpleCard;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 
-import mtglifecounter.storage.MtgLifeCounterDao;
-import mtglifecounter.storage.MtgLifeCounterDynamoDbClient;
-import mtglifecounter.storage.MtgLifeCounterGame;
-import mtglifecounter.storage.MtgLifeCounterGameData;
+import mtglifecounter.database.MtgLifeCounterDao;
+import mtglifecounter.database.MtgLifeCounterDynamoDbClient;
+import mtglifecounter.database.MtgLifeCounterGame;
+import mtglifecounter.database.MtgLifeCounterGameData;
 
 /**
  * The {@link MtgLifeCounterManager} receives various events and intents and manages the flow of the
@@ -490,8 +490,6 @@ public class MtgLifeCounterManager {
         //check for winner & loser
         if (game.didPlayerLose(playerName,score)){
         	//if that player is at <= 0 life total.
-        	//TODO implement multiple player logic.  Currently supports one.
-        	
         	SortedMap<String, Long> allScoresInDescndingOrder = game.getAllScoresInDescndingOrder();
         	allScoresInDescndingOrder.remove(playerName); //remove player from collection of players
         	

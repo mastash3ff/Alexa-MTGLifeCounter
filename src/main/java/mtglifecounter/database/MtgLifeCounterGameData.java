@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package mtglifecounter.storage;
+package mtglifecounter.database;
 
 import java.util.ArrayList;
 import java.util.HashMap;
