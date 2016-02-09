@@ -70,6 +70,6 @@ public class MtgLifeCounterGameData {
 
     @Override
     public String toString() {
-        return "[ScoreKeeperGameData players: " + players + "] scores: " + scores + "]";
+        return "[MTGLifeCounterGameData players: " + players + "] scores: " + scores + "]";
     }
 }

@@ -62,12 +62,12 @@ public class MtgLifeCounterManager {
      */
     private static final int MAX_PLAYERS_FOR_SPEECH = 3;
 
-    private final MtgLifeCounterDao scoreKeeperDao;
+    private final MtgLifeCounterDao mtgLifeCounterDao;
 
     public MtgLifeCounterManager(final AmazonDynamoDBClient amazonDynamoDbClient) {
         MtgLifeCounterDynamoDbClient dynamoDbClient =
                 new MtgLifeCounterDynamoDbClient(amazonDynamoDbClient);
-        scoreKeeperDao = new MtgLifeCounterDao(dynamoDbClient);
+        mtgLifeCounterDao = new MtgLifeCounterDao(dynamoDbClient);
     }
 
     /**
@@ -83,20 +83,20 @@ public class MtgLifeCounterManager {
         // Speak welcome message and ask user questions
         // based on whether there are players or not.
         String speechText, repromptText;
-        MtgLifeCounterGame game = scoreKeeperDao.getMTGLifeCounterGame(session);
+        MtgLifeCounterGame game = mtgLifeCounterDao.getMTGLifeCounterGame(session);
 
         if (game == null || !game.hasPlayers()) {
-            speechText = "MTGLifeCounter, Let's start your game. Who's your first player?";
+            speechText = "MTG Life Counter, Let's start your game. Who's your first player?";
             repromptText = "Please tell me who is your first player?";
         } else if (!game.hasScores()) {
             speechText =
-                    "MTGLifeCounter, you have " + game.getNumberOfPlayers()
+                    "MTG Life Counter, you have " + game.getNumberOfPlayers()
                             + (game.getNumberOfPlayers() == 1 ? " player" : " players")
                             + " in the game. You can give a player points, add another player,"
                             + " reset all players or exit. Which would you like?";
             repromptText = MtgLifeCounterTextUtil.COMPLETE_HELP;
         } else {
-            speechText = "MTGLifeCounter, What can I do for you?";
+            speechText = "MTG Life Counter, What can I do for you?";
             repromptText = MtgLifeCounterTextUtil.NEXT_HELP;
         }
 
@@ -113,7 +113,7 @@ public class MtgLifeCounterManager {
      * @return response for the new game intent.
      */
     public SpeechletResponse getNewGameIntentResponse(Session session, MtgLifeCounterSkillContext skillContext) {
-        MtgLifeCounterGame game = scoreKeeperDao.getMTGLifeCounterGame(session);
+        MtgLifeCounterGame game = mtgLifeCounterDao.getMTGLifeCounterGame(session);
 
         if (game == null) {
             return getAskSpeechletResponse("New game started. Who's your first player?",
@@ -122,7 +122,7 @@ public class MtgLifeCounterManager {
 
         // Reset current game
         game.resetScores(20); //default is 20
-        scoreKeeperDao.saveMTGLifeCounterGame(game);
+        mtgLifeCounterDao.saveMTGLifeCounterGame(game);
 
         String speechText =
                 "New game started with " + game.getNumberOfPlayers() + " existing player"
@@ -162,7 +162,7 @@ public class MtgLifeCounterManager {
         }
 
         // Load the previous game
-        MtgLifeCounterGame game = scoreKeeperDao.getMTGLifeCounterGame(session);
+        MtgLifeCounterGame game = mtgLifeCounterDao.getMTGLifeCounterGame(session);
         if (game == null) {
             game = MtgLifeCounterGame.newInstance(session, MtgLifeCounterGameData.newInstance());
         }
@@ -170,7 +170,7 @@ public class MtgLifeCounterManager {
         game.addPlayer(newPlayerName);
 
         // Save the updated game
-        scoreKeeperDao.saveMTGLifeCounterGame(game);
+        mtgLifeCounterDao.saveMTGLifeCounterGame(game);
 
         String speechText = newPlayerName + " has joined your game. ";
         String repromptText = null;
@@ -220,7 +220,7 @@ public class MtgLifeCounterManager {
             return getAskSpeechletResponse(speechText, speechText);
         }
 
-        MtgLifeCounterGame game = scoreKeeperDao.getMTGLifeCounterGame(session);
+        MtgLifeCounterGame game = mtgLifeCounterDao.getMTGLifeCounterGame(session);
         if (game == null) {
             return getTellSpeechletResponse("A game has not been started. Please say New Game to "
                     + "start a new game before adding scores.");
@@ -238,7 +238,7 @@ public class MtgLifeCounterManager {
         }
 
         // Save game
-        scoreKeeperDao.saveMTGLifeCounterGame(game);
+        mtgLifeCounterDao.saveMTGLifeCounterGame(game);
 
         // Prepare speech text. If the game has less than 3 players, skip reading scores for each
         // player for brevity.
@@ -263,7 +263,7 @@ public class MtgLifeCounterManager {
      */
     public SpeechletResponse getTellScoresIntentResponse(Intent intent, Session session) {
         // tells the scores in the leaderboard and send the result in card.
-        MtgLifeCounterGame game = scoreKeeperDao.getMTGLifeCounterGame(session);
+        MtgLifeCounterGame game = mtgLifeCounterDao.getMTGLifeCounterGame(session);
 
         if (game == null || !game.hasPlayers()) {
             return getTellSpeechletResponse("Nobody has joined the game.");
@@ -292,7 +292,7 @@ public class MtgLifeCounterManager {
         // Remove all players
         MtgLifeCounterGame game =
                 MtgLifeCounterGame.newInstance(session, MtgLifeCounterGameData.newInstance());
-        scoreKeeperDao.saveMTGLifeCounterGame(game);
+        mtgLifeCounterDao.saveMTGLifeCounterGame(game);
 
         String speechText = "New game started without players. Who do you want to add first?";
         return getAskSpeechletResponse(speechText, speechText);
@@ -467,7 +467,7 @@ public class MtgLifeCounterManager {
             return getAskSpeechletResponse(speechText, speechText);
         }
 
-        MtgLifeCounterGame game = scoreKeeperDao.getMTGLifeCounterGame(session);
+        MtgLifeCounterGame game = mtgLifeCounterDao.getMTGLifeCounterGame(session);
         if (game == null) {
             return getTellSpeechletResponse("A game has not been started. Please say New Game to "
                     + "start a new game before subtracting scores.");
@@ -485,7 +485,7 @@ public class MtgLifeCounterManager {
         }
         
         // Save game
-        scoreKeeperDao.saveMTGLifeCounterGame(game);
+        mtgLifeCounterDao.saveMTGLifeCounterGame(game);
         
         //check for winner & loser
         if (game.didPlayerLose(playerName,score)){
