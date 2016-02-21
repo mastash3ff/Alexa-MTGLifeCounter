@@ -443,27 +443,40 @@ AddPlayerIntent add player {PlayerName} to the game
 AddPlayerIntent add {PlayerName} to the game
 AddPlayerIntent {PlayerName}
 
-AddScoreIntent give {PlayerName} {ScoreNumber}
-AddScoreIntent give {PlayerName} {ScoreNumber} points
-AddScoreIntent {ScoreNumber} more for {PlayerName}
-AddScoreIntent {ScoreNumber} for {PlayerName}
-AddScoreIntent give {PlayerName} {ScoreNumber} more points
-AddScoreIntent {ScoreNumber} more points for {PlayerName}
-AddScoreIntent {ScoreNumber} points for {PlayerName}
+AddScoreIntent give {PlayerName} {LifeNumber}
+AddScoreIntent give {PlayerName} {LifeNumber} points
+AddScoreIntent give {PlayerName} {LifeNumber} life
+AddScoreIntent {LifeNumber} more for {PlayerName}
+AddScoreIntent {LifeNumber} more life for {PlayerName}
+AddScoreIntent {LifeNumber} for {PlayerName}
+AddScoreIntent {LifeNumber} life for {PlayerName}
+AddScoreIntent give {PlayerName} {LifeNumber} more points
+AddScoreIntent give {PlayerName} {LifeNumber} more life
+AddScoreIntent {LifeNumber} more points for {PlayerName}
+AddScoreIntent {LifeNumber} more life for {PlayerName}
+AddScoreIntent {LifeNumber} points for {PlayerName}
+AddScoreIntent {LifeNumber} life for {PlayerName}
 
-SubScoreIntent lose {PlayerName} {ScoreNumber}
-SubScoreIntent take {PlayerName} {ScoreNumber}
-SubScoreIntent remove {PlayerName} {ScoreNumber}
-SubScoreIntent strip {PlayerName} {ScoreNumber}
-SubScoreIntent remove {ScoreNumber} points from {PlayerName}
-SubScoreIntent remove {ScoreNumber} {PlayerName}
-SubScoreIntent strip {ScoreNumber} points from {PlayerName}
-SubScoreIntent {ScoreNumber} from {PlayerName}
-SubScoreIntent give {PlayerName} {ScoreNumber} more points
-SubScoreIntent {ScoreNumber} less points for {PlayerName}
-SubScoreIntent {ScoreNumber} less for {PlayerName}
-SubScoreIntent subtract {ScoreNumber} points for {PlayerName}
-SubScoreIntent sub {ScoreNumber} points for {PlayerName}
-SubScoreIntent take {ScoreNumber} points from {PlayerName}
-SubScoreIntent take {ScoreNumber} from {PlayerName}
-SubScoreIntent take {ScoreNumber} away from {PlayerName}
+SubScoreIntent lose {PlayerName} {LifeNumber}
+SubScoreIntent take {PlayerName} {LifeNumber}
+SubScoreIntent remove {PlayerName} {LifeNumber}
+SubScoreIntent strip {PlayerName} {LifeNumber}
+SubScoreIntent remove {LifeNumber} points from {PlayerName}
+SubScoreIntent remove {LifeNumber} life from {PlayerName}
+SubScoreIntent remove {LifeNumber} {PlayerName}
+SubScoreIntent strip {LifeNumber} points from {PlayerName}
+SubScoreIntent strip {LifeNumber} life from {PlayerName}
+SubScoreIntent {LifeNumber} from {PlayerName}
+SubScoreIntent give {PlayerName} {LifeNumber} more points
+SubScoreIntent give {PlayerName} {LifeNumber} more life
+SubScoreIntent {LifeNumber} less points for {PlayerName}
+SubScoreIntent {LifeNumber} less life for {PlayerName}
+SubScoreIntent {LifeNumber} less for {PlayerName}
+SubScoreIntent subtract {LifeNumber} points for {PlayerName}
+SubScoreIntent subtract {LifeNumber} life for {PlayerName}
+SubScoreIntent sub {LifeNumber} points for {PlayerName}
+SubScoreIntent sub {LifeNumber} life for {PlayerName}
+SubScoreIntent take {LifeNumber} points from {PlayerName}
+SubScoreIntent take {LifeNumber} life from {PlayerName}
+SubScoreIntent take {LifeNumber} from {PlayerName}
+SubScoreIntent take {LifeNumber} away from {PlayerName}

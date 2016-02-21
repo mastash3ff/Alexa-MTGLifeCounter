@@ -79,11 +79,11 @@ public class MtgLifeCounterSpeechlet implements Speechlet {
 			return scoreKeeperManager.getNewGameIntentResponse(session, skillContext);
 		case "AddPlayerIntent":
 			return scoreKeeperManager.getAddPlayerIntentResponse(intent, session, skillContext);
-		case "AddScoreIntent":
+		case "AddLifeIntent":
 			return scoreKeeperManager.getAddLifeIntentResponse(intent, session, skillContext);
-		case "SubScoreIntent":
+		case "SubLifeIntent":
 			return scoreKeeperManager.getSubLifeIntentResponse(intent, session, skillContext);
-		case "TellScoresIntent":
+		case "TellLifeTotalsIntent":
 			return scoreKeeperManager.getTellLifeTotalsIntentResponse(intent, session);
 		case "ResetPlayersIntent":
 			return scoreKeeperManager.getResetPlayersIntentResponse(intent, session);

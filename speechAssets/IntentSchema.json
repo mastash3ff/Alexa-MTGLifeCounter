@@ -10,27 +10,27 @@
       ]
     },
     {
-      "intent": "AddScoreIntent",
+      "intent": "AddLifeIntent",
       "slots": [
         {
           "name": "PlayerName",
           "type": "LIST_OF_PLAYER_NAMES"
         },
         {
-          "name": "ScoreNumber",
+          "name": "LifeNumber",
           "type": "AMAZON.NUMBER"
         }
       ]
     },
      {
-      "intent": "SubScoreIntent",
+      "intent": "SubLifeIntent",
       "slots": [
         {
           "name": "PlayerName",
           "type": "LIST_OF_PLAYER_NAMES"
         },
         {
-          "name": "ScoreNumber",
+          "name": "LifeNumber",
           "type": "AMAZON.NUMBER"
         }
       ]
@@ -42,7 +42,7 @@
       "intent": "NewGameIntent"
     },
     {
-      "intent": "TellScoresIntent"
+      "intent": "TellLifeTotalsIntent"
     },
     {
       "intent": "AMAZON.HelpIntent"
