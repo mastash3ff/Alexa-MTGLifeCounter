@@ -36,9 +36,9 @@ import com.amazon.speech.speechlet.SpeechletException;
 import com.amazon.speech.speechlet.SpeechletResponse;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 
-public class MTGLifeCounterSpeechlet implements Speechlet {
+public class MtgLifeCounterSpeechlet implements Speechlet {
 
-	private static final Logger log = LoggerFactory.getLogger(MTGLifeCounterSpeechlet.class);
+	private static final Logger log = LoggerFactory.getLogger(MtgLifeCounterSpeechlet.class);
 	private AmazonDynamoDBClient amazonDynamoDBClient;
 	private MtgLifeCounterManager scoreKeeperManager;
 	private MtgLifeCounterSkillContext skillContext;
@@ -80,11 +80,11 @@ public class MTGLifeCounterSpeechlet implements Speechlet {
 		case "AddPlayerIntent":
 			return scoreKeeperManager.getAddPlayerIntentResponse(intent, session, skillContext);
 		case "AddScoreIntent":
-			return scoreKeeperManager.getAddScoreIntentResponse(intent, session, skillContext);
+			return scoreKeeperManager.getAddLifeIntentResponse(intent, session, skillContext);
 		case "SubScoreIntent":
-			return scoreKeeperManager.getSubScoreIntentResponse(intent, session, skillContext);
+			return scoreKeeperManager.getSubLifeIntentResponse(intent, session, skillContext);
 		case "TellScoresIntent":
-			return scoreKeeperManager.getTellScoresIntentResponse(intent, session);
+			return scoreKeeperManager.getTellLifeTotalsIntentResponse(intent, session);
 		case "ResetPlayersIntent":
 			return scoreKeeperManager.getResetPlayersIntentResponse(intent, session);
 		case "AMAZON.HelpIntent":

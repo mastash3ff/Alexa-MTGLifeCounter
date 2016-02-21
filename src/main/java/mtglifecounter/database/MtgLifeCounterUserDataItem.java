@@ -54,7 +54,7 @@ public class MtgLifeCounterUserDataItem {
     }
 
     @DynamoDBAttribute(attributeName = "Data")
-    @DynamoDBMarshalling(marshallerClass = ScoreKeeperGameDataMarshaller.class)
+    @DynamoDBMarshalling(marshallerClass = MtgLifeCounterGameDataMarshaller.class)
     public MtgLifeCounterGameData getGameData() {
         return gameData;
     }
@@ -67,7 +67,7 @@ public class MtgLifeCounterUserDataItem {
      * A {@link DynamoDBMarshaller} that provides marshalling and unmarshalling logic for
      * {@link MtgLifeCounterGameData} values so that they can be persisted in the database as String.
      */
-    public static class ScoreKeeperGameDataMarshaller implements
+    public static class MtgLifeCounterGameDataMarshaller implements
             DynamoDBMarshaller<MtgLifeCounterGameData> {
 
         @Override

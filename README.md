@@ -14,12 +14,14 @@ Alexa application that keeps track of life totals in Magic: The Gathering.  By d
 ## Examples
 
 ### Dialog model:
-    User: "Alexa, tell life counter to reset."
-    Alexa: "New game started without players. Who do you want to add first?"
-    User: "Add Jessica"
-    Alexa: "Jessica has joined your game"
+    User: "Alexa, start life counter
+    Alexa: "MTG Life Counter, Let's start your game. Who's your first player?"
     User: "Add player Brandon"
     Alexa: "Brandon has joined your game"
+    User: "Add Jessica"
+    Alexa: "Jessica has joined your game"
+    User: "Alexa, tell life counter to reset."
+    Alexa: "New game started without players. Who do you want to add first?"
 
     (skill saves the new game and ends)
 

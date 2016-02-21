@@ -427,6 +427,14 @@ TellScoresIntent who is leading
 TellScoresIntent who's got the most points
 TellScoresIntent who's in the lead
 TellScoresIntent winner
+TellScoresIntent tell me the life totals
+TellScoresIntent tell me life totals
+TellScoresIntent life totals
+TellScoresIntent tell us the life totals
+TellScoresIntents life
+TellScoresIntents who has the most life
+TellScoresIntents who has the least life
+TellScoresIntents what are the life totals
 
 AddPlayerIntent add player {PlayerName}
 AddPlayerIntent add {PlayerName}

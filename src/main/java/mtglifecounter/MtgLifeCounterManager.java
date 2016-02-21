@@ -53,9 +53,9 @@ public class MtgLifeCounterManager {
     private static final String SLOT_PLAYER_NAME = "PlayerName";
 
     /**
-     * Intent slot for player score.
+     * Intent slot for player life.
      */
-    private static final String SLOT_SCORE_NUMBER = "ScoreNumber";
+    private static final String SLOT_LIFE_NUMBER = "LifeNumber";
 
     /**
      * Maximum number of players for which scores must be announced while adding a score.
@@ -83,16 +83,16 @@ public class MtgLifeCounterManager {
         // Speak welcome message and ask user questions
         // based on whether there are players or not.
         String speechText, repromptText;
-        MtgLifeCounterGame game = mtgLifeCounterDao.getMTGLifeCounterGame(session);
+        MtgLifeCounterGame game = mtgLifeCounterDao.getMtgLifeCounterGame(session);
 
         if (game == null || !game.hasPlayers()) {
             speechText = "MTG Life Counter, Let's start your game. Who's your first player?";
             repromptText = "Please tell me who is your first player?";
-        } else if (!game.hasScores()) {
+        } else if (!game.hasLifeTotals()) {
             speechText =
                     "MTG Life Counter, you have " + game.getNumberOfPlayers()
                             + (game.getNumberOfPlayers() == 1 ? " player" : " players")
-                            + " in the game. You can give a player points, add another player,"
+                            + " in the game. You can add or subtract life from a player, add another player,"
                             + " reset all players or exit. Which would you like?";
             repromptText = MtgLifeCounterTextUtil.COMPLETE_HELP;
         } else {
@@ -113,7 +113,7 @@ public class MtgLifeCounterManager {
      * @return response for the new game intent.
      */
     public SpeechletResponse getNewGameIntentResponse(Session session, MtgLifeCounterSkillContext skillContext) {
-        MtgLifeCounterGame game = mtgLifeCounterDao.getMTGLifeCounterGame(session);
+        MtgLifeCounterGame game = mtgLifeCounterDao.getMtgLifeCounterGame(session);
 
         if (game == null) {
             return getAskSpeechletResponse("New game started. Who's your first player?",
@@ -121,8 +121,8 @@ public class MtgLifeCounterManager {
         }
 
         // Reset current game
-        game.resetScores(20); //default is 20
-        mtgLifeCounterDao.saveMTGLifeCounterGame(game);
+        game.resetLifeTotals(20); //default is 20
+        mtgLifeCounterDao.saveMtgLifeCounterGame(game);
 
         String speechText =
                 "New game started with " + game.getNumberOfPlayers() + " existing player"
@@ -130,7 +130,7 @@ public class MtgLifeCounterManager {
 
         if (skillContext.needsMoreHelp()) {
             String repromptText =
-                    "You can give a player points, add another player, reset all players or "
+                    "You can add or subtract life from a player, add another player, reset all players or "
                             + "exit. What would you like?";
             speechText += repromptText;
             return getAskSpeechletResponse(speechText, repromptText);
@@ -162,15 +162,16 @@ public class MtgLifeCounterManager {
         }
 
         // Load the previous game
-        MtgLifeCounterGame game = mtgLifeCounterDao.getMTGLifeCounterGame(session);
+        MtgLifeCounterGame game = mtgLifeCounterDao.getMtgLifeCounterGame(session);
         if (game == null) {
             game = MtgLifeCounterGame.newInstance(session, MtgLifeCounterGameData.newInstance());
         }
 
         game.addPlayer(newPlayerName);
+        game.addLifeForPlayer(newPlayerName, 20);
 
         // Save the updated game
-        mtgLifeCounterDao.saveMTGLifeCounterGame(game);
+        mtgLifeCounterDao.saveMtgLifeCounterGame(game);
 
         String speechText = newPlayerName + " has joined your game. ";
         String repromptText = null;
@@ -203,7 +204,7 @@ public class MtgLifeCounterManager {
      *            {@link MtgLifeCounterSkillContext} for this request
      * @return response for the add score intent
      */
-    public SpeechletResponse getAddScoreIntentResponse(Intent intent, Session session,
+    public SpeechletResponse getAddLifeIntentResponse(Intent intent, Session session,
             MtgLifeCounterSkillContext skillContext) {
         String playerName =
                 MtgLifeCounterTextUtil.getPlayerName(intent.getSlot(SLOT_PLAYER_NAME).getValue());
@@ -214,16 +215,16 @@ public class MtgLifeCounterManager {
 
         int score = 0;
         try {
-            score = Integer.parseInt(intent.getSlot(SLOT_SCORE_NUMBER).getValue());
+            score = Integer.parseInt(intent.getSlot(SLOT_LIFE_NUMBER).getValue());
         } catch (NumberFormatException e) {
-            String speechText = "Sorry, I did not hear the points. Please say again?";
+            String speechText = "Sorry, I did not hear the amount of life. Please say again?";
             return getAskSpeechletResponse(speechText, speechText);
         }
 
-        MtgLifeCounterGame game = mtgLifeCounterDao.getMTGLifeCounterGame(session);
+        MtgLifeCounterGame game = mtgLifeCounterDao.getMtgLifeCounterGame(session);
         if (game == null) {
             return getTellSpeechletResponse("A game has not been started. Please say New Game to "
-                    + "start a new game before adding scores.");
+                    + "start a new game before adding life.");
         }
 
         if (game.getNumberOfPlayers() == 0) {
@@ -232,25 +233,97 @@ public class MtgLifeCounterManager {
         }
 
         // Update score
-        if (!game.addScoreForPlayer(playerName, score)) {
+        if (!game.addLifeForPlayer(playerName, score)) {
             String speechText = "Sorry, " + playerName + " has not joined the game. What else?";
             return getAskSpeechletResponse(speechText, speechText);
         }
 
         // Save game
-        mtgLifeCounterDao.saveMTGLifeCounterGame(game);
+        mtgLifeCounterDao.saveMtgLifeCounterGame(game);
 
         // Prepare speech text. If the game has less than 3 players, skip reading scores for each
         // player for brevity.
         String speechText = score + " for " + playerName + ". ";
         if (game.getNumberOfPlayers() > MAX_PLAYERS_FOR_SPEECH) {
-            speechText += playerName + " has " + game.getScoreForPlayer(playerName) + " in total.";
+            speechText += playerName + " has " + game.getLifeTotalForPlayer(playerName) + " in total.";
         } else {
-            speechText += getAllScoresAsSpeechText(game.getAllScoresInDescndingOrder());
+            speechText += getAllLifeTotalsAsSpeechText(game.getAllScoresInDescndingOrder());
         }
 
         return getTellSpeechletResponse(speechText);
     }
+    
+    /**
+     * Creates and returns response for the subtract score intent.
+     *
+     * @param intent
+     *            {@link Intent} for this request
+     * @param session
+     *            {@link Session} for this request
+     * @param skillContext
+     *            {@link MtgLifeCounterSkillContext} for this request
+     * @return response for the add score intent
+     */
+	public SpeechletResponse getSubLifeIntentResponse(Intent intent, Session session, MtgLifeCounterSkillContext skillContext) {
+        String playerName =
+                MtgLifeCounterTextUtil.getPlayerName(intent.getSlot(SLOT_PLAYER_NAME).getValue());
+        if (playerName == null) {
+            String speechText = "Sorry, I did not hear the player name. Please say again?";
+            return getAskSpeechletResponse(speechText, speechText);
+        }
+
+        int score = 0;
+        try {
+            score = Integer.parseInt(intent.getSlot(SLOT_LIFE_NUMBER).getValue());
+        } catch (NumberFormatException e) {
+            String speechText = "Sorry, I did not hear the amount of life. Please say again?";
+            return getAskSpeechletResponse(speechText, speechText);
+        }
+
+        MtgLifeCounterGame game = mtgLifeCounterDao.getMtgLifeCounterGame(session);
+        if (game == null) {
+            return getTellSpeechletResponse("A game has not been started. Please say New Game to "
+                    + "start a new game before subtracting life.");
+        }
+
+        if (game.getNumberOfPlayers() == 0) {
+            String speechText = "Sorry, no player has joined the game yet. What can I do for you?";
+            return getAskSpeechletResponse(speechText, speechText);
+        }
+
+        // Update scores by subtracting
+        if (!game.subtractLifeForPlayer(playerName, score)) {
+            String speechText = "Sorry, " + playerName + " has not joined the game. What else?";
+            return getAskSpeechletResponse(speechText, speechText);
+        }
+        
+        // Save game
+        mtgLifeCounterDao.saveMtgLifeCounterGame(game);
+        
+        //check for winner & loser
+        if (game.didPlayerLose(playerName,score)){
+        	//if that player is at <= 0 life total.
+        	SortedMap<String, Long> allScoresInDescndingOrder = game.getAllScoresInDescndingOrder();
+        	allScoresInDescndingOrder.remove(playerName); //remove player from collection of players
+        	
+        	if (allScoresInDescndingOrder.size() == 1){
+        		String lastPlayer = allScoresInDescndingOrder.lastKey();
+        		String speechText = "Player " + lastPlayer + " has won the game!";
+        		return getTellSpeechletResponse(speechText);
+        	}
+        }
+
+        // Prepare speech text. If the game has less than 3 players, skip reading scores for each
+        // player for brevity.
+        String speechText = score + " from " + playerName + ". ";
+        if (game.getNumberOfPlayers() > MAX_PLAYERS_FOR_SPEECH) {
+            speechText += playerName + " has " + game.getLifeTotalForPlayer(playerName) + " in total.";
+        } else {
+            speechText += getAllLifeTotalsAsSpeechText(game.getAllScoresInDescndingOrder());
+        }
+
+        return getTellSpeechletResponse(speechText);
+	}
 
     /**
      * Creates and returns response for the tell scores intent.
@@ -261,17 +334,17 @@ public class MtgLifeCounterManager {
      *            {@link Session} for this request
      * @return response for the tell scores intent
      */
-    public SpeechletResponse getTellScoresIntentResponse(Intent intent, Session session) {
+    public SpeechletResponse getTellLifeTotalsIntentResponse(Intent intent, Session session) {
         // tells the scores in the leaderboard and send the result in card.
-        MtgLifeCounterGame game = mtgLifeCounterDao.getMTGLifeCounterGame(session);
+        MtgLifeCounterGame game = mtgLifeCounterDao.getMtgLifeCounterGame(session);
 
         if (game == null || !game.hasPlayers()) {
             return getTellSpeechletResponse("Nobody has joined the game.");
         }
 
         SortedMap<String, Long> sortedScores = game.getAllScoresInDescndingOrder();
-        String speechText = getAllScoresAsSpeechText(sortedScores);
-        Card leaderboardScoreCard = getLeaderboardScoreCard(sortedScores);
+        String speechText = getAllLifeTotalsAsSpeechText(sortedScores);
+        Card leaderboardScoreCard = getLeaderboardLifeCard(sortedScores);
 
         PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
         speech.setText(speechText);
@@ -292,7 +365,7 @@ public class MtgLifeCounterManager {
         // Remove all players
         MtgLifeCounterGame game =
                 MtgLifeCounterGame.newInstance(session, MtgLifeCounterGameData.newInstance());
-        mtgLifeCounterDao.saveMTGLifeCounterGame(game);
+        mtgLifeCounterDao.saveMtgLifeCounterGame(game);
 
         String speechText = "New game started without players. Who do you want to add first?";
         return getAskSpeechletResponse(speechText, speechText);
@@ -331,7 +404,7 @@ public class MtgLifeCounterManager {
     public SpeechletResponse getExitIntentResponse(Intent intent, Session session,
             MtgLifeCounterSkillContext skillContext) {
         return skillContext.needsMoreHelp() ? getTellSpeechletResponse("Okay. Whenever you're "
-                + "ready, you can start giving points to the players in your game.")
+                + "ready, you can start adding or subtracting life from the players in your game.")
                 : getTellSpeechletResponse("");
     }
 
@@ -391,19 +464,20 @@ public class MtgLifeCounterManager {
      *            A {@link Map} of scores
      * @return a speech ready text containing scores
      */
-    private String getAllScoresAsSpeechText(Map<String, Long> scores) {
+    private String getAllLifeTotalsAsSpeechText(Map<String, Long> scores) {
         StringBuilder speechText = new StringBuilder();
         int index = 0;
         for (Entry<String, Long> entry : scores.entrySet()) {
             if (scores.size() > 1 && index == scores.size() - 1) {
                 speechText.append(" and ");
             }
-            String singularOrPluralPoints = entry.getValue() == 1 ? " point, " : " points, ";
+            //String singularOrPluralPoints = entry.getValue() == 1 ? " point, " : " points, ";
             speechText
                     .append(entry.getKey())
                     .append(" has ")
                     .append(entry.getValue())
-                    .append(singularOrPluralPoints);
+                    //.append(singularOrPluralPoints);
+                    .append("life.");
             index++;
         }
 
@@ -419,7 +493,7 @@ public class MtgLifeCounterManager {
      *            A {@link Map} of scores
      * @return leaderboard text containing all scores in the game
      */
-    private Card getLeaderboardScoreCard(Map<String, Long> scores) {
+    private Card getLeaderboardLifeCard(Map<String, Long> scores) {
         StringBuilder leaderboard = new StringBuilder();
         int index = 0;
         for (Entry<String, Long> entry : scores.entrySet()) {
@@ -439,76 +513,4 @@ public class MtgLifeCounterManager {
         card.setContent(leaderboard.toString());
         return card;
     }
-
-    /**
-     * Creates and returns response for the subtract score intent.
-     *
-     * @param intent
-     *            {@link Intent} for this request
-     * @param session
-     *            {@link Session} for this request
-     * @param skillContext
-     *            {@link MtgLifeCounterSkillContext} for this request
-     * @return response for the add score intent
-     */
-	public SpeechletResponse getSubScoreIntentResponse(Intent intent, Session session, MtgLifeCounterSkillContext skillContext) {
-        String playerName =
-                MtgLifeCounterTextUtil.getPlayerName(intent.getSlot(SLOT_PLAYER_NAME).getValue());
-        if (playerName == null) {
-            String speechText = "Sorry, I did not hear the player name. Please say again?";
-            return getAskSpeechletResponse(speechText, speechText);
-        }
-
-        int score = 0;
-        try {
-            score = Integer.parseInt(intent.getSlot(SLOT_SCORE_NUMBER).getValue());
-        } catch (NumberFormatException e) {
-            String speechText = "Sorry, I did not hear the points. Please say again?";
-            return getAskSpeechletResponse(speechText, speechText);
-        }
-
-        MtgLifeCounterGame game = mtgLifeCounterDao.getMTGLifeCounterGame(session);
-        if (game == null) {
-            return getTellSpeechletResponse("A game has not been started. Please say New Game to "
-                    + "start a new game before subtracting scores.");
-        }
-
-        if (game.getNumberOfPlayers() == 0) {
-            String speechText = "Sorry, no player has joined the game yet. What can I do for you?";
-            return getAskSpeechletResponse(speechText, speechText);
-        }
-
-        // Update scores by subtracting
-        if (!game.subtractScoreForPlayer(playerName, score)) {
-            String speechText = "Sorry, " + playerName + " has not joined the game. What else?";
-            return getAskSpeechletResponse(speechText, speechText);
-        }
-        
-        // Save game
-        mtgLifeCounterDao.saveMTGLifeCounterGame(game);
-        
-        //check for winner & loser
-        if (game.didPlayerLose(playerName,score)){
-        	//if that player is at <= 0 life total.
-        	SortedMap<String, Long> allScoresInDescndingOrder = game.getAllScoresInDescndingOrder();
-        	allScoresInDescndingOrder.remove(playerName); //remove player from collection of players
-        	
-        	if (allScoresInDescndingOrder.size() == 1){
-        		String lastPlayer = allScoresInDescndingOrder.lastKey();
-        		String speechText = "Player " + lastPlayer + " has won the game!";
-        		return getTellSpeechletResponse(speechText);
-        	}
-        }
-
-        // Prepare speech text. If the game has less than 3 players, skip reading scores for each
-        // player for brevity.
-        String speechText = score + " from " + playerName + ". ";
-        if (game.getNumberOfPlayers() > MAX_PLAYERS_FOR_SPEECH) {
-            speechText += playerName + " has " + game.getScoreForPlayer(playerName) + " in total.";
-        } else {
-            speechText += getAllScoresAsSpeechText(game.getAllScoresInDescndingOrder());
-        }
-
-        return getTellSpeechletResponse(speechText);
-	}
 }

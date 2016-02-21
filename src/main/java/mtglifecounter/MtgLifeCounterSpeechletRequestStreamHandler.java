@@ -45,6 +45,6 @@ public final class MtgLifeCounterSpeechletRequestStreamHandler extends Speechlet
     }
 
     public MtgLifeCounterSpeechletRequestStreamHandler() {
-        super(new MTGLifeCounterSpeechlet(), supportedApplicationIds);
+        super(new MtgLifeCounterSpeechlet(), supportedApplicationIds);
     }
 }

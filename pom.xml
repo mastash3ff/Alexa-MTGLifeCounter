@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>mtg.lifecounter</groupId>
 	<artifactId>mtg.lifecounter</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>MTG Life Counter for Alexa</name>
 	<description>Keeps track of player's life total in Magic the Gathering for Alexa</description>
 	<properties>

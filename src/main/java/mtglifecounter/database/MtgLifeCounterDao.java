@@ -43,7 +43,7 @@ public class MtgLifeCounterDao {
      * @param session
      * @return
      */
-    public MtgLifeCounterGame getMTGLifeCounterGame(Session session) {
+    public MtgLifeCounterGame getMtgLifeCounterGame(Session session) {
         MtgLifeCounterUserDataItem item = new MtgLifeCounterUserDataItem();
         item.setCustomerId(session.getUser().getUserId());
 
@@ -61,7 +61,7 @@ public class MtgLifeCounterDao {
      * 
      * @param game
      */
-    public void saveMTGLifeCounterGame(MtgLifeCounterGame game) {
+    public void saveMtgLifeCounterGame(MtgLifeCounterGame game) {
         MtgLifeCounterUserDataItem item = new MtgLifeCounterUserDataItem();
         item.setCustomerId(game.getSession().getUser().getUserId());
         item.setGameData(game.getGameData());

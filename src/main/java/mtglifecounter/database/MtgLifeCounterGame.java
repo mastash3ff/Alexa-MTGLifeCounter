@@ -120,8 +120,8 @@ public final class MtgLifeCounterGame {
      * 
      * @return true if the game has any scores listed, false otherwise
      */
-    public boolean hasScores() {
-        return !gameData.getScores().isEmpty();
+    public boolean hasLifeTotals() {
+        return !gameData.getLifeTotals().isEmpty();
     }
 
     /**
@@ -131,8 +131,8 @@ public final class MtgLifeCounterGame {
      *            Name of the player
      * @return score for a player
      */
-    public long getScoreForPlayer(String playerName) {
-        return gameData.getScores().get(playerName);
+    public long getLifeTotalForPlayer(String playerName) {
+        return gameData.getLifeTotals().get(playerName);
     }
 
     /**
@@ -145,17 +145,17 @@ public final class MtgLifeCounterGame {
      *            score to be added
      * @return true if the player existed, false otherwise.
      */
-    public boolean addScoreForPlayer(String playerName, long score) {
+    public boolean addLifeForPlayer(String playerName, long score) {
         if (!hasPlayer(playerName)) {
             return false;
         }
 
         long currentScore = 0L;
-        if (gameData.getScores().containsKey(playerName)) {
-            currentScore = gameData.getScores().get(playerName);
+        if (gameData.getLifeTotals().containsKey(playerName)) {
+            currentScore = gameData.getLifeTotals().get(playerName);
         }
 
-        gameData.getScores().put(playerName, Long.valueOf(currentScore + score));
+        gameData.getLifeTotals().put(playerName, Long.valueOf(currentScore + score));
         return true;
     }
     
@@ -169,17 +169,17 @@ public final class MtgLifeCounterGame {
      *            score to be added
      * @return true if the player existed, false otherwise.
      */
-    public boolean subtractScoreForPlayer(String playerName, long score) {
+    public boolean subtractLifeForPlayer(String playerName, long score) {
         if (!hasPlayer(playerName)) {
             return false;
         }
 
         long currentScore = 0L;
-        if (gameData.getScores().containsKey(playerName)) {
-            currentScore = gameData.getScores().get(playerName);
+        if (gameData.getLifeTotals().containsKey(playerName)) {
+            currentScore = gameData.getLifeTotals().get(playerName);
         }
 
-        gameData.getScores().put(playerName, Long.valueOf(currentScore - score));
+        gameData.getLifeTotals().put(playerName, Long.valueOf(currentScore - score));
 
         return true;
     }
@@ -190,8 +190,8 @@ public final class MtgLifeCounterGame {
         }
 
         long currentScore = 0L;
-        if (gameData.getScores().containsKey(playerName)) {
-            currentScore = gameData.getScores().get(playerName);
+        if (gameData.getLifeTotals().containsKey(playerName)) {
+            currentScore = gameData.getLifeTotals().get(playerName);
         }
         
         if (currentScore <= 0){
@@ -204,15 +204,15 @@ public final class MtgLifeCounterGame {
     /**
      * Resets the scores for all players to zero.
      */
-    public void resetScores() {
+    public void resetLifeTotals() {
         for (String playerName : gameData.getPlayers()) {
-            gameData.getScores().put(playerName, Long.valueOf(0L));
+            gameData.getLifeTotals().put(playerName, Long.valueOf(0L));
         }
     }
     
-    public void resetScores(Integer score){
+    public void resetLifeTotals(Integer score){
         for (String playerName : gameData.getPlayers()) {
-            gameData.getScores().put(playerName, Long.valueOf(score));
+            gameData.getLifeTotals().put(playerName, Long.valueOf(score));
         }
     }
 
@@ -224,17 +224,17 @@ public final class MtgLifeCounterGame {
      *         decreasing order of scores
      */
     public SortedMap<String, Long> getAllScoresInDescndingOrder() {
-		Map<String, Long> scores = gameData.getScores();
+		Map<String, Long> scores = gameData.getLifeTotals();
 
 		for (String playerName : gameData.getPlayers()) {
-			if (!gameData.getScores().containsKey(playerName)) {
+			if (!gameData.getLifeTotals().containsKey(playerName)) {
 				scores.put(playerName, Long.valueOf(0L));
 			}
 		}
 
         SortedMap<String, Long> sortedScores =
-                new TreeMap<String, Long>(new ScoreComparator(scores));
-        sortedScores.putAll(gameData.getScores());
+                new TreeMap<String, Long>(new LifeTotalComparator(scores));
+        sortedScores.putAll(gameData.getLifeTotals());
         return sortedScores;
     }
 
@@ -244,11 +244,11 @@ public final class MtgLifeCounterGame {
      * <p>
      * Note: this comparator imposes orderings that are inconsistent with equals.
      */
-    private static final class ScoreComparator implements Comparator<String>, Serializable {
+    private static final class LifeTotalComparator implements Comparator<String>, Serializable {
         private static final long serialVersionUID = 7849926209990327190L;
         private final Map<String, Long> baseMap;
 
-        private ScoreComparator(Map<String, Long> baseMap) {
+        private LifeTotalComparator(Map<String, Long> baseMap) {
             this.baseMap = baseMap;
         }
 

@@ -48,7 +48,7 @@ public class MtgLifeCounterGameData {
     public static MtgLifeCounterGameData newInstance() {
         MtgLifeCounterGameData newInstance = new MtgLifeCounterGameData();
         newInstance.setPlayers(new ArrayList<String>());
-        newInstance.setScores(new HashMap<String, Long>());
+        newInstance.setLifeTotals(new HashMap<String, Long>());
         return newInstance;
     }
 
@@ -60,16 +60,16 @@ public class MtgLifeCounterGameData {
         this.players = players;
     }
 
-    public Map<String, Long> getScores() {
+    public Map<String, Long> getLifeTotals() {
         return scores;
     }
 
-    public void setScores(Map<String, Long> scores) {
+    public void setLifeTotals(Map<String, Long> scores) {
         this.scores = scores;
     }
 
     @Override
     public String toString() {
-        return "[MTGLifeCounterGameData players: " + players + "] scores: " + scores + "]";
+        return "[MTGLifeCounterGameData players: " + players + "] life totals: " + scores + "]";
     }
 }

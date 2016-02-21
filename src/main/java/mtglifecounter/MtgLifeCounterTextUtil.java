@@ -43,14 +43,14 @@ public final class MtgLifeCounterTextUtil {
      * Text of complete help.
      */
     public static final String COMPLETE_HELP =
-            "Here's some things you can say. Add Brandon, take Brandon 5 points, tell me the score, "
+            "Here's some things you can say. Add Brandon, take five life from Brandon, tell me the life totals, "
                     + "new game, reset, and exit.";
 
     /**
      * Text of next help.
      */
-    public static final String NEXT_HELP = "You can give a player points, add a player, get the "
-            + "current score, or say help. What would you like?";
+    public static final String NEXT_HELP = "You can give a player life, , take away a player's life total, add a player, get the "
+            + "current life totals, or say help. What would you like?";
 
     /**
      * Cleans up the player name, and sanitizes it against the blacklist.
