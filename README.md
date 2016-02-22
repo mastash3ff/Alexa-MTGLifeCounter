@@ -5,6 +5,7 @@ Alexa application that keeps track of life totals in Magic: The Gathering.  By d
 - Add more player names to 'speechAssets/customSlotTypes/LIST_OF_NAMES'
 - More dialogue variety for Add/Subtracting scores.
 - More documentation in this README particularly dialogue examples
+- Application Icon
 
 ## Future Features
 
@@ -13,26 +14,38 @@ Alexa application that keeps track of life totals in Magic: The Gathering.  By d
 
 ## Examples
 
-### Dialog model:
-    User: "Alexa, start life counter
+Interact with the skill by invoking a phrase with 'life counter'.  Some usage examples can be found below.
+
+## How to launch the skill and interact with it:
+    User: "Alexa, start life counter."
     Alexa: "MTG Life Counter, Let's start your game. Who's your first player?"
-    User: "Add player Brandon"
+    User: "Add Brandon"
     Alexa: "Brandon has joined your game"
-    User: "Add Jessica"
+    User: "Add player Jessica"
     Alexa: "Jessica has joined your game"
-    User: "Alexa, tell life counter to reset."
-    Alexa: "New game started without players. Who do you want to add first?"
 
     (skill saves the new game and ends)
 
-    User: "Alexa, tell life counter to give Jessica three points."
-    Alexa: "Updating your score, three points for Jessica"
+    User: "Alexa, tell life counter to give Jessica three life."
+    Alexa: "3 for Jessica. Jessica has 23 life. and Brandon has 20 life."
 
-    (skill saves the latest score and ends)
+    (skill saves the latest life totals and ends)
 
-### Simple one Request/Response:
-    User: "Alexa, ask life counter what's the current score?"
-    Alexa: "Brandon has twenty points and Jessica has twenty-three"
+## Some things you can ask/tell the skill:
+    User: "Alexa, ask life counter what are the life totals?"
+    Alexa: "Brandon has twenty points and Jessica has twenty-three."
+
+    User: "Alexa, tell life counter to take twenty life from Brandon."
+    Alexa: "Player Jessica has won the game!"
+
+    User: "Alexa, tell life counter to start a new game"
+    Alexa: "New game started with 2 existing player."
+
+    User: "Alexa, tell life counter to reset."
+    Alexa: "New game started without players. Who do you want to add first?"
+
+    User: "Alexa, ask life counter for help."
+    Alexa: "Here's some things you can say. Add Brandon, take five life from Brandon, tell me the life totals, new game, reset, and exit."
 
 ## Development Setup
 

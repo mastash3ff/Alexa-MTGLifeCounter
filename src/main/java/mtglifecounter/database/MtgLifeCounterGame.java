@@ -35,195 +35,216 @@ import com.amazon.speech.speechlet.Session;
  * Represents a score keeper game.
  */
 public final class MtgLifeCounterGame {
-    private Session session;
-    private MtgLifeCounterGameData gameData;
+	private Session session;
+	private MtgLifeCounterGameData gameData;
 
-    private MtgLifeCounterGame() {
-    }
+	private MtgLifeCounterGame() {
+	}
 
-    /**
-     * Creates a new instance of {@link MtgLifeCounterGame} with the provided {@link Session} and
-     * {@link MtgLifeCounterGameData}.
-     * <p>
-     * To create a new instance of {@link MtgLifeCounterGameData}, see
-     * {@link MtgLifeCounterGameData#newInstance()}
-     * 
-     * @param session
-     * @param gameData
-     * @return
-     * @see MtgLifeCounterGameData#newInstance()
-     */
-    public static MtgLifeCounterGame newInstance(Session session, MtgLifeCounterGameData gameData) {
-        MtgLifeCounterGame game = new MtgLifeCounterGame();
-        game.setSession(session);
-        game.setGameData(gameData);
-        return game;
-    }
+	/**
+	 * Creates a new instance of {@link MtgLifeCounterGame} with the provided {@link Session} and
+	 * {@link MtgLifeCounterGameData}.
+	 * <p>
+	 * To create a new instance of {@link MtgLifeCounterGameData}, see
+	 * {@link MtgLifeCounterGameData#newInstance()}
+	 * 
+	 * @param session
+	 * @param gameData
+	 * @return
+	 * @see MtgLifeCounterGameData#newInstance()
+	 */
+	public static MtgLifeCounterGame newInstance(Session session, MtgLifeCounterGameData gameData) {
+		MtgLifeCounterGame game = new MtgLifeCounterGame();
+		game.setSession(session);
+		game.setGameData(gameData);
+		return game;
+	}
 
-    protected void setSession(Session session) {
-        this.session = session;
-    }
+	protected void setSession(Session session) {
+		this.session = session;
+	}
 
-    protected Session getSession() {
-        return session;
-    }
+	protected Session getSession() {
+		return session;
+	}
 
-    protected MtgLifeCounterGameData getGameData() {
-        return gameData;
-    }
+	protected MtgLifeCounterGameData getGameData() {
+		return gameData;
+	}
 
-    protected void setGameData(MtgLifeCounterGameData gameData) {
-        this.gameData = gameData;
-    }
+	protected void setGameData(MtgLifeCounterGameData gameData) {
+		this.gameData = gameData;
+	}
 
-    /**
-     * Returns true if the game has any players, false otherwise.
-     * 
-     * @return true if the game has any players, false otherwise
-     */
-    public boolean hasPlayers() {
-        return !gameData.getPlayers().isEmpty();
-    }
+	/**
+	 * Returns true if the game has any players, false otherwise.
+	 * 
+	 * @return true if the game has any players, false otherwise
+	 */
+	public boolean hasPlayers() {
+		return !gameData.getPlayers().isEmpty();
+	}
 
-    /**
-     * Returns the number of players in the game.
-     * 
-     * @return the number of players in the game
-     */
-    public int getNumberOfPlayers() {
-        return gameData.getPlayers().size();
-    }
+	/**
+	 * Returns the number of players in the game.
+	 * 
+	 * @return the number of players in the game
+	 */
+	public int getNumberOfPlayers() {
+		return gameData.getPlayers().size();
+	}
 
-    /**
-     * Add a player to the game.
-     * 
-     * @param playerName
-     *            Name of the player
-     */
-    public void addPlayer(String playerName) {
-        gameData.getPlayers().add(playerName);
-    }
+	/**
+	 * Add a player to the game.
+	 * 
+	 * @param playerName
+	 *            Name of the player
+	 */
+	public void addPlayer(String playerName) {
+		gameData.getPlayers().add(playerName);
+	}
 
-    /**
-     * Returns true if the player exists in the game, false otherwise.
-     * 
-     * @param playerName
-     *            Name of the player
-     * @return true if the player exists in the game, false otherwise
-     */
-    public boolean hasPlayer(String playerName) {
-        return gameData.getPlayers().contains(playerName);
-    }
+	/**
+	 * Returns true if the player exists in the game, false otherwise.
+	 * 
+	 * @param playerName
+	 *            Name of the player
+	 * @return true if the player exists in the game, false otherwise
+	 */
+	public boolean hasPlayer(String playerName) {
+		return gameData.getPlayers().contains(playerName);
+	}
 
-    /**
-     * Returns true if the game has any scores listed, false otherwise.
-     * 
-     * @return true if the game has any scores listed, false otherwise
-     */
-    public boolean hasLifeTotals() {
-        return !gameData.getLifeTotals().isEmpty();
-    }
+	/**
+	 * Returns true if the game has any scores listed, false otherwise.
+	 * 
+	 * @return true if the game has any scores listed, false otherwise
+	 */
+	public boolean hasLifeTotals() {
+		return !gameData.getLifeTotals().isEmpty();
+	}
 
-    /**
-     * Returns the score for a player.
-     * 
-     * @param playerName
-     *            Name of the player
-     * @return score for a player
-     */
-    public long getLifeTotalForPlayer(String playerName) {
-        return gameData.getLifeTotals().get(playerName);
-    }
+	/**
+	 * Returns the life total for a player.
+	 * 
+	 * @param playerName
+	 *            Name of the player
+	 * @return score for a player
+	 */
+	public long getLifeTotalForPlayer(String playerName) {
+		return gameData.getLifeTotals().get(playerName);
+	}
 
-    /**
-     * Adds the score passed to it to the current score for a player. Returns true if the player
-     * existed, false otherwise.
-     * 
-     * @param playerName
-     *            Name of the player
-     * @param score
-     *            score to be added
-     * @return true if the player existed, false otherwise.
-     */
-    public boolean addLifeForPlayer(String playerName, long score) {
-        if (!hasPlayer(playerName)) {
-            return false;
-        }
+	/**
+	 * Sets Player to provide life provided.
+	 * @param playerName
+	 *            Name of the player
+	 * @param life
+	 * 			  Life to be provided to the player
+	 * @return true if the player existed, false otherwise
+	 */
+	public boolean setLifeForPlayer(String playerName, long life){
+		if (!hasPlayer(playerName)) {
+			return false;
+		}
 
-        long currentScore = 0L;
-        if (gameData.getLifeTotals().containsKey(playerName)) {
-            currentScore = gameData.getLifeTotals().get(playerName);
-        }
+		gameData.getLifeTotals().put(playerName, Long.valueOf(life));
+		return true;
+	}
 
-        gameData.getLifeTotals().put(playerName, Long.valueOf(currentScore + score));
-        return true;
-    }
-    
-    /**
-     * Subtracts the score passed to it to the current score for a player. Returns true if the player
-     * existed, false otherwise.
-     * 
-     * @param playerName
-     *            Name of the player
-     * @param score
-     *            score to be added
-     * @return true if the player existed, false otherwise.
-     */
-    public boolean subtractLifeForPlayer(String playerName, long score) {
-        if (!hasPlayer(playerName)) {
-            return false;
-        }
+	/**
+	 * Adds the life passed to it to the current score for a player. Returns true if the player
+	 * existed, false otherwise.
+	 * 
+	 * @param playerName
+	 *            Name of the player
+	 * @param life
+	 *            life to be added
+	 * @return true if the player existed, false otherwise.
+	 */
+	public boolean addLifeForPlayer(String playerName, long life) {
+		if (!hasPlayer(playerName)) {
+			return false;
+		}
 
-        long currentScore = 0L;
-        if (gameData.getLifeTotals().containsKey(playerName)) {
-            currentScore = gameData.getLifeTotals().get(playerName);
-        }
+		long currentScore = 0L;
+		if (gameData.getLifeTotals().containsKey(playerName)) {
+			currentScore = gameData.getLifeTotals().get(playerName);
+		}
 
-        gameData.getLifeTotals().put(playerName, Long.valueOf(currentScore - score));
+		gameData.getLifeTotals().put(playerName, Long.valueOf(currentScore + life));
+		return true;
+	}
 
-        return true;
-    }
-    
-    public boolean didPlayerLose(String playerName, long score){
-        if (!hasPlayer(playerName)) {
-            return false;
-        }
+	/**
+	 * Subtracts the life passed to it to the current score for a player. Returns true if the player
+	 * existed, false otherwise.
+	 * 
+	 * @param playerName
+	 *            Name of the player
+	 * @param life
+	 *            life to be added
+	 * @return true if the player existed, false otherwise.
+	 */
+	public boolean subtractLifeForPlayer(String playerName, long life) {
+		if (!hasPlayer(playerName)) {
+			return false;
+		}
 
-        long currentScore = 0L;
-        if (gameData.getLifeTotals().containsKey(playerName)) {
-            currentScore = gameData.getLifeTotals().get(playerName);
-        }
-        
-        if (currentScore <= 0){
-        	return true;
-        }
+		long currentLife = 0L;
+		if (gameData.getLifeTotals().containsKey(playerName)) {
+			currentLife = gameData.getLifeTotals().get(playerName);
+		}
 
-        return false;
-    }
+		gameData.getLifeTotals().put(playerName, Long.valueOf(currentLife - life));
 
-    /**
-     * Resets the scores for all players to zero.
-     */
-    public void resetLifeTotals() {
-        for (String playerName : gameData.getPlayers()) {
-            gameData.getLifeTotals().put(playerName, Long.valueOf(0L));
-        }
-    }
-    
-    public void resetLifeTotals(Integer score){
-        for (String playerName : gameData.getPlayers()) {
-            gameData.getLifeTotals().put(playerName, Long.valueOf(score));
-        }
-    }
+		return true;
+	}
 
-    /**
-     * Returns a {@link SortedMap} of player names mapped to scores with the map sorted in
-     * decreasing order of scores.
-     * 
-     * @return a {@link SortedMap} of player names mapped to scores with the map sorted in
-     *         decreasing order of scores
-     */
-    public SortedMap<String, Long> getAllScoresInDescndingOrder() {
+	public boolean didPlayerLose(String playerName, long score){
+		if (!hasPlayer(playerName)) {
+			return false;
+		}
+
+		long currentScore = 0L;
+		if (gameData.getLifeTotals().containsKey(playerName)) {
+			currentScore = gameData.getLifeTotals().get(playerName);
+		}
+
+		if (currentScore <= 0){
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Resets the life totals for all players to zero.
+	 */
+	public void resetLifeTotals() {
+		for (String playerName : gameData.getPlayers()) {
+			gameData.getLifeTotals().put(playerName, Long.valueOf(0L));
+		}
+	}
+
+	/**
+	 * Resets life totals to give amount
+	 * @param score
+	 */
+	public void resetLifeTotals(Integer life){
+		for (String playerName : gameData.getPlayers()) {
+			gameData.getLifeTotals().put(playerName, Long.valueOf(life));
+		}
+	}
+
+	/**
+	 * Returns a {@link SortedMap} of player names mapped to scores with the map sorted in
+	 * decreasing order of scores.
+	 * 
+	 * @return a {@link SortedMap} of player names mapped to scores with the map sorted in
+	 *         decreasing order of scores
+	 */
+	public SortedMap<String, Long> getAllScoresInDescndingOrder() {
 		Map<String, Long> scores = gameData.getLifeTotals();
 
 		for (String playerName : gameData.getPlayers()) {
@@ -232,30 +253,30 @@ public final class MtgLifeCounterGame {
 			}
 		}
 
-        SortedMap<String, Long> sortedScores =
-                new TreeMap<String, Long>(new LifeTotalComparator(scores));
-        sortedScores.putAll(gameData.getLifeTotals());
-        return sortedScores;
-    }
+		SortedMap<String, Long> sortedScores =
+				new TreeMap<String, Long>(new LifeTotalComparator(scores));
+		sortedScores.putAll(gameData.getLifeTotals());
+		return sortedScores;
+	}
 
-    /**
-     * This comparator takes a map of player name and scores and uses that to sort a collection of
-     * player names in the descending order of their scores.
-     * <p>
-     * Note: this comparator imposes orderings that are inconsistent with equals.
-     */
-    private static final class LifeTotalComparator implements Comparator<String>, Serializable {
-        private static final long serialVersionUID = 7849926209990327190L;
-        private final Map<String, Long> baseMap;
+	/**
+	 * This comparator takes a map of player name and scores and uses that to sort a collection of
+	 * player names in the descending order of their scores.
+	 * <p>
+	 * Note: this comparator imposes orderings that are inconsistent with equals.
+	 */
+	private static final class LifeTotalComparator implements Comparator<String>, Serializable {
+		private static final long serialVersionUID = 7849926209990327190L;
+		private final Map<String, Long> baseMap;
 
-        private LifeTotalComparator(Map<String, Long> baseMap) {
-            this.baseMap = baseMap;
-        }
+		private LifeTotalComparator(Map<String, Long> baseMap) {
+			this.baseMap = baseMap;
+		}
 
-        @Override
-        public int compare(String a, String b) {
-            int longCompare = Long.compare(baseMap.get(b), baseMap.get(a));
-            return longCompare != 0 ? longCompare : a.compareTo(b);
-        }
-    }
+		@Override
+		public int compare(String a, String b) {
+			int longCompare = Long.compare(baseMap.get(b), baseMap.get(a));
+			return longCompare != 0 ? longCompare : a.compareTo(b);
+		}
+	}
 }

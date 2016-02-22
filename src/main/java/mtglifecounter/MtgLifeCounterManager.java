@@ -168,7 +168,7 @@ public class MtgLifeCounterManager {
         }
 
         game.addPlayer(newPlayerName);
-        game.addLifeForPlayer(newPlayerName, 20);
+        game.setLifeForPlayer(newPlayerName, 20);
 
         // Save the updated game
         mtgLifeCounterDao.saveMtgLifeCounterGame(game);
@@ -477,7 +477,7 @@ public class MtgLifeCounterManager {
                     .append(" has ")
                     .append(entry.getValue())
                     //.append(singularOrPluralPoints);
-                    .append("life.");
+                    .append(" life.");
             index++;
         }
 

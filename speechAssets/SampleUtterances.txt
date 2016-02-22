@@ -384,57 +384,57 @@ NewGameIntent open score
 NewGameIntent set up score
 NewGameIntent start a game
 
-TellScoresIntent first
-TellScoresIntent first place
-TellScoresIntent give me the numbers
-TellScoresIntent give me the scoreboard
-TellScoresIntent give us who is in the lead
-TellScoresIntent how do our scores look
-TellScoresIntent last
-TellScoresIntent last place
-TellScoresIntent leaderboard
-TellScoresIntent list current points
-TellScoresIntent loser
-TellScoresIntent numbers
-TellScoresIntent points
-TellScoresIntent rankings
-TellScoresIntent read the standing
-TellScoresIntent recite the points
-TellScoresIntent say the numbers
-TellScoresIntent share our current numbers
-TellScoresIntent standing
-TellScoresIntent state our standing
-TellScoresIntent state the winner
-TellScoresIntent tell me current score
-TellScoresIntent tell me the current score
-TellScoresIntent tell me the score
-TellScoresIntent tell us current score
-TellScoresIntent tell us the current score
-TellScoresIntent tell us the score
-TellScoresIntent tell us who's losing
-TellScoresIntent tell us who's winning
-TellScoresIntent the current score
-TellScoresIntent the ranking
-TellScoresIntent the score
-TellScoresIntent view points
-TellScoresIntent what is the score
-TellScoresIntent what points does everyone have
-TellScoresIntent what scores do everyone have
-TellScoresIntent what's the score
-TellScoresIntent which one of us is in first place
-TellScoresIntent which one of us is winning
-TellScoresIntent who is leading
-TellScoresIntent who's got the most points
-TellScoresIntent who's in the lead
-TellScoresIntent winner
-TellScoresIntent tell me the life totals
-TellScoresIntent tell me life totals
-TellScoresIntent life totals
-TellScoresIntent tell us the life totals
-TellScoresIntents life
-TellScoresIntents who has the most life
-TellScoresIntents who has the least life
-TellScoresIntents what are the life totals
+TellLifeTotalsIntent first
+TellLifeTotalsIntent first place
+TellLifeTotalsIntent give me the numbers
+TellLifeTotalsIntent give me the scoreboard
+TellLifeTotalsIntent give us who is in the lead
+TellLifeTotalsIntent how do our scores look
+TellLifeTotalsIntent last
+TellLifeTotalsIntent last place
+TellLifeTotalsIntent leaderboard
+TellLifeTotalsIntent list current points
+TellLifeTotalsIntent loser
+TellLifeTotalsIntent numbers
+TellLifeTotalsIntent points
+TellLifeTotalsIntent rankings
+TellLifeTotalsIntent read the standing
+TellLifeTotalsIntent recite the points
+TellLifeTotalsIntent say the numbers
+TellLifeTotalsIntent share our current numbers
+TellLifeTotalsIntent standing
+TellLifeTotalsIntent state our standing
+TellLifeTotalsIntent state the winner
+TellLifeTotalsIntent tell me current score
+TellLifeTotalsIntent tell me the current score
+TellLifeTotalsIntent tell me the score
+TellLifeTotalsIntent tell us current score
+TellLifeTotalsIntent tell us the current score
+TellLifeTotalsIntent tell us the score
+TellLifeTotalsIntent tell us who's losing
+TellLifeTotalsIntent tell us who's winning
+TellLifeTotalsIntent the current score
+TellLifeTotalsIntent the ranking
+TellLifeTotalsIntent the score
+TellLifeTotalsIntent view points
+TellLifeTotalsIntent what is the score
+TellLifeTotalsIntent what points does everyone have
+TellLifeTotalsIntent what scores do everyone have
+TellLifeTotalsIntent what's the score
+TellLifeTotalsIntent which one of us is in first place
+TellLifeTotalsIntent which one of us is winning
+TellLifeTotalsIntent who is leading
+TellLifeTotalsIntent who's got the most points
+TellLifeTotalsIntent who's in the lead
+TellLifeTotalsIntent winner
+TellLifeTotalsIntent tell me the life totals
+TellLifeTotalsIntent tell me life totals
+TellLifeTotalsIntent life totals
+TellLifeTotalsIntent tell us the life totals
+TellLifeTotalsIntent life
+TellLifeTotalsIntent who has the most life
+TellLifeTotalsIntent who has the least life
+TellLifeTotalsIntent what are the life totals
 
 AddPlayerIntent add player {PlayerName}
 AddPlayerIntent add {PlayerName}
@@ -443,40 +443,40 @@ AddPlayerIntent add player {PlayerName} to the game
 AddPlayerIntent add {PlayerName} to the game
 AddPlayerIntent {PlayerName}
 
-AddScoreIntent give {PlayerName} {LifeNumber}
-AddScoreIntent give {PlayerName} {LifeNumber} points
-AddScoreIntent give {PlayerName} {LifeNumber} life
-AddScoreIntent {LifeNumber} more for {PlayerName}
-AddScoreIntent {LifeNumber} more life for {PlayerName}
-AddScoreIntent {LifeNumber} for {PlayerName}
-AddScoreIntent {LifeNumber} life for {PlayerName}
-AddScoreIntent give {PlayerName} {LifeNumber} more points
-AddScoreIntent give {PlayerName} {LifeNumber} more life
-AddScoreIntent {LifeNumber} more points for {PlayerName}
-AddScoreIntent {LifeNumber} more life for {PlayerName}
-AddScoreIntent {LifeNumber} points for {PlayerName}
-AddScoreIntent {LifeNumber} life for {PlayerName}
+AddLifeIntent give {PlayerName} {LifeNumber}
+AddLifeIntent give {PlayerName} {LifeNumber} points
+AddLifeIntent give {PlayerName} {LifeNumber} life
+AddLifeIntent {LifeNumber} more for {PlayerName}
+AddLifeIntent {LifeNumber} more life for {PlayerName}
+AddLifeIntent {LifeNumber} for {PlayerName}
+AddLifeIntent {LifeNumber} life for {PlayerName}
+AddLifeIntent give {PlayerName} {LifeNumber} more points
+AddLifeIntent give {PlayerName} {LifeNumber} more life
+AddLifeIntent {LifeNumber} more points for {PlayerName}
+AddLifeIntent {LifeNumber} more life for {PlayerName}
+AddLifeIntent {LifeNumber} points for {PlayerName}
+AddLifeIntent {LifeNumber} life for {PlayerName}
 
-SubScoreIntent lose {PlayerName} {LifeNumber}
-SubScoreIntent take {PlayerName} {LifeNumber}
-SubScoreIntent remove {PlayerName} {LifeNumber}
-SubScoreIntent strip {PlayerName} {LifeNumber}
-SubScoreIntent remove {LifeNumber} points from {PlayerName}
-SubScoreIntent remove {LifeNumber} life from {PlayerName}
-SubScoreIntent remove {LifeNumber} {PlayerName}
-SubScoreIntent strip {LifeNumber} points from {PlayerName}
-SubScoreIntent strip {LifeNumber} life from {PlayerName}
-SubScoreIntent {LifeNumber} from {PlayerName}
-SubScoreIntent give {PlayerName} {LifeNumber} more points
-SubScoreIntent give {PlayerName} {LifeNumber} more life
-SubScoreIntent {LifeNumber} less points for {PlayerName}
-SubScoreIntent {LifeNumber} less life for {PlayerName}
-SubScoreIntent {LifeNumber} less for {PlayerName}
-SubScoreIntent subtract {LifeNumber} points for {PlayerName}
-SubScoreIntent subtract {LifeNumber} life for {PlayerName}
-SubScoreIntent sub {LifeNumber} points for {PlayerName}
-SubScoreIntent sub {LifeNumber} life for {PlayerName}
-SubScoreIntent take {LifeNumber} points from {PlayerName}
-SubScoreIntent take {LifeNumber} life from {PlayerName}
-SubScoreIntent take {LifeNumber} from {PlayerName}
-SubScoreIntent take {LifeNumber} away from {PlayerName}
+SubLifeIntent lose {PlayerName} {LifeNumber}
+SubLifeIntent take {PlayerName} {LifeNumber}
+SubLifeIntent remove {PlayerName} {LifeNumber}
+SubLifeIntent strip {PlayerName} {LifeNumber}
+SubLifeIntent remove {LifeNumber} points from {PlayerName}
+SubLifeIntent remove {LifeNumber} life from {PlayerName}
+SubLifeIntent remove {LifeNumber} {PlayerName}
+SubLifeIntent strip {LifeNumber} points from {PlayerName}
+SubLifeIntent strip {LifeNumber} life from {PlayerName}
+SubLifeIntent {LifeNumber} from {PlayerName}
+SubLifeIntent give {PlayerName} {LifeNumber} more points
+SubLifeIntent give {PlayerName} {LifeNumber} more life
+SubLifeIntent {LifeNumber} less points for {PlayerName}
+SubLifeIntent {LifeNumber} less life for {PlayerName}
+SubLifeIntent {LifeNumber} less for {PlayerName}
+SubLifeIntent subtract {LifeNumber} points for {PlayerName}
+SubLifeIntent subtract {LifeNumber} life for {PlayerName}
+SubLifeIntent sub {LifeNumber} points for {PlayerName}
+SubLifeIntent sub {LifeNumber} life for {PlayerName}
+SubLifeIntent take {LifeNumber} points from {PlayerName}
+SubLifeIntent take {LifeNumber} life from {PlayerName}
+SubLifeIntent take {LifeNumber} from {PlayerName}
+SubLifeIntent take {LifeNumber} away from {PlayerName}
