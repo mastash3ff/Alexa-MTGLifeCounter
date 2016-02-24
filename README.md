@@ -1,5 +1,13 @@
-#MTG Life Counter for Alexa
+#Alexa- Life Counter for MTG
 Alexa application that keeps track of life totals in Magic: The Gathering.  By default, players start with life totals of 20.  Some example usages can be found below.
+
+## Contributing & Getting a 'free' T-Shirt
+See following link on how to get a tshirt https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/content/alexa-developer-skill-promotion 
+
+How to contribute
+- See issues (easy documentation stuff to fix)
+- Add additional documentation.
+- Contribute code fixes n shit
 
 ## Things that can be improved on now
 - Add more player names to 'speechAssets/customSlotTypes/LIST_OF_NAMES'
