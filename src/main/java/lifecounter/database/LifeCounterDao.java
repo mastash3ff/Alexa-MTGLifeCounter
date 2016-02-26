@@ -21,50 +21,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package mtglifecounter.database;
+package lifecounter.database;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazon.speech.speechlet.Session;
 
 /**
- * Client for DynamoDB persistance layer for the Score Keeper skill.
+ * Contains the methods to interact with the persistence layer for MTGLifeCounter in DynamoDB.
  */
-public class MtgLifeCounterDynamoDbClient {
-    private final AmazonDynamoDBClient dynamoDBClient;
+public class LifeCounterDao {
+    private final LifeCounterDynamoDbClient dynamoDbClient;
 
-    public MtgLifeCounterDynamoDbClient(final AmazonDynamoDBClient dynamoDBClient) {
-        this.dynamoDBClient = dynamoDBClient;
+    public LifeCounterDao(LifeCounterDynamoDbClient dynamoDbClient) {
+        this.dynamoDbClient = dynamoDbClient;
     }
 
     /**
-     * Loads an item from DynamoDB by primary Hash Key. Callers of this method should pass in an
-     * object which represents an item in the DynamoDB table item with the primary key populated.
+     * Reads and returns the {@link LifeCounterGame} using user information from the session.
+     * <p>
+     * Returns null if the item could not be found in the database.
      * 
-     * @param tableItem
+     * @param session
      * @return
      */
-    public MtgLifeCounterUserDataItem loadItem(final MtgLifeCounterUserDataItem tableItem) {
-        DynamoDBMapper mapper = createDynamoDBMapper();
-        MtgLifeCounterUserDataItem item = mapper.load(tableItem);
-        return item;
+    public LifeCounterGame getLifeCounterGame(Session session) {
+        LifeCounterUserDataItem item = new LifeCounterUserDataItem();
+        item.setCustomerId(session.getUser().getUserId());
+
+        item = dynamoDbClient.loadItem(item);
+
+        if (item == null) {
+            return null;
+        }
+
+        return LifeCounterGame.newInstance(session, item.getGameData());
     }
 
     /**
-     * Stores an item to DynamoDB.
+     * Saves the {@link LifeCounterGame} into the database.
      * 
-     * @param tableItem
+     * @param game
      */
-    public void saveItem(final MtgLifeCounterUserDataItem tableItem) {
-        DynamoDBMapper mapper = createDynamoDBMapper();
-        mapper.save(tableItem);
-    }
+    public void saveLifeCounterGame(LifeCounterGame game) {
+        LifeCounterUserDataItem item = new LifeCounterUserDataItem();
+        item.setCustomerId(game.getSession().getUser().getUserId());
+        item.setGameData(game.getGameData());
 
-    /**
-     * Creates a {@link DynamoDBMapper} using the default configurations.
-     * 
-     * @return
-     */
-    private DynamoDBMapper createDynamoDBMapper() {
-        return new DynamoDBMapper(dynamoDBClient);
+        dynamoDbClient.saveItem(item);
     }
 }

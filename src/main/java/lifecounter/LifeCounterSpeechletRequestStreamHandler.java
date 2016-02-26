@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package mtglifecounter;
+package lifecounter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,7 +35,7 @@ import com.amazon.speech.speechlet.lambda.SpeechletRequestStreamHandler;
  * build this project using the {@code lambda-compile} Ant task and upload the resulting zip file to
  * power your function.
  */
-public final class MtgLifeCounterSpeechletRequestStreamHandler extends SpeechletRequestStreamHandler {
+public final class LifeCounterSpeechletRequestStreamHandler extends SpeechletRequestStreamHandler {
     private static final Set<String> supportedApplicationIds;
 
     static {
@@ -44,7 +44,7 @@ public final class MtgLifeCounterSpeechletRequestStreamHandler extends Speechlet
         supportedApplicationIds.add("amzn1.echo-sdk-ams.app.c92b8a78-da3c-4b70-84c3-afbc65333da7");
     }
 
-    public MtgLifeCounterSpeechletRequestStreamHandler() {
-        super(new MtgLifeCounterSpeechlet(), supportedApplicationIds);
+    public LifeCounterSpeechletRequestStreamHandler() {
+        super(new LifeCounterSpeechlet(), supportedApplicationIds);
     }
 }

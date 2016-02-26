@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package mtglifecounter;
+package lifecounter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,12 +36,12 @@ import com.amazon.speech.speechlet.SpeechletException;
 import com.amazon.speech.speechlet.SpeechletResponse;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 
-public class MtgLifeCounterSpeechlet implements Speechlet {
+public class LifeCounterSpeechlet implements Speechlet {
 
-	private static final Logger log = LoggerFactory.getLogger(MtgLifeCounterSpeechlet.class);
+	private static final Logger log = LoggerFactory.getLogger(LifeCounterSpeechlet.class);
 	private AmazonDynamoDBClient amazonDynamoDBClient;
-	private MtgLifeCounterManager scoreKeeperManager;
-	private MtgLifeCounterSkillContext skillContext;
+	private LifeCounterManager scoreKeeperManager;
+	private LifeCounterSkillContext skillContext;
 
 	@Override
 	public void onSessionStarted(final SessionStartedRequest request, final Session session)
@@ -112,8 +112,8 @@ public class MtgLifeCounterSpeechlet implements Speechlet {
 	private void initializeComponents() {
 		if (amazonDynamoDBClient == null) {
 			amazonDynamoDBClient = new AmazonDynamoDBClient();
-			scoreKeeperManager = new MtgLifeCounterManager(amazonDynamoDBClient);
-			skillContext = new MtgLifeCounterSkillContext();
+			scoreKeeperManager = new LifeCounterManager(amazonDynamoDBClient);
+			skillContext = new LifeCounterSkillContext();
 		}
 	}
 }

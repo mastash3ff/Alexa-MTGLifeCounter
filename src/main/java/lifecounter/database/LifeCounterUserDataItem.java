@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package mtglifecounter.database;
+package lifecounter.database;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
@@ -37,12 +37,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * skill.
  */
 @DynamoDBTable(tableName = "MtgLifeCounterUserData")
-public class MtgLifeCounterUserDataItem {
+public class LifeCounterUserDataItem {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private String customerId;
 
-    private MtgLifeCounterGameData gameData;
+    private LifeCounterGameData gameData;
 
     @DynamoDBHashKey(attributeName = "CustomerId")
     public String getCustomerId() {
@@ -55,23 +55,23 @@ public class MtgLifeCounterUserDataItem {
 
     @DynamoDBAttribute(attributeName = "Data")
     @DynamoDBMarshalling(marshallerClass = MtgLifeCounterGameDataMarshaller.class)
-    public MtgLifeCounterGameData getGameData() {
+    public LifeCounterGameData getGameData() {
         return gameData;
     }
 
-    public void setGameData(MtgLifeCounterGameData gameData) {
+    public void setGameData(LifeCounterGameData gameData) {
         this.gameData = gameData;
     }
 
     /**
      * A {@link DynamoDBMarshaller} that provides marshalling and unmarshalling logic for
-     * {@link MtgLifeCounterGameData} values so that they can be persisted in the database as String.
+     * {@link LifeCounterGameData} values so that they can be persisted in the database as String.
      */
     public static class MtgLifeCounterGameDataMarshaller implements
-            DynamoDBMarshaller<MtgLifeCounterGameData> {
+            DynamoDBMarshaller<LifeCounterGameData> {
 
         @Override
-        public String marshall(MtgLifeCounterGameData gameData) {
+        public String marshall(LifeCounterGameData gameData) {
             try {
                 return OBJECT_MAPPER.writeValueAsString(gameData);
             } catch (JsonProcessingException e) {
@@ -80,9 +80,9 @@ public class MtgLifeCounterUserDataItem {
         }
 
         @Override
-        public MtgLifeCounterGameData unmarshall(Class<MtgLifeCounterGameData> clazz, String value) {
+        public LifeCounterGameData unmarshall(Class<LifeCounterGameData> clazz, String value) {
             try {
-                return OBJECT_MAPPER.readValue(value, new TypeReference<MtgLifeCounterGameData>() {
+                return OBJECT_MAPPER.readValue(value, new TypeReference<LifeCounterGameData>() {
                 });
             } catch (Exception e) {
                 throw new IllegalStateException("Unable to unmarshall game data value", e);

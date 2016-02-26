@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package mtglifecounter.database;
+package lifecounter.database;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -34,27 +34,27 @@ import com.amazon.speech.speechlet.Session;
 /**
  * Represents a score keeper game.
  */
-public final class MtgLifeCounterGame {
+public final class LifeCounterGame {
 	private Session session;
-	private MtgLifeCounterGameData gameData;
+	private LifeCounterGameData gameData;
 
-	private MtgLifeCounterGame() {
+	private LifeCounterGame() {
 	}
 
 	/**
-	 * Creates a new instance of {@link MtgLifeCounterGame} with the provided {@link Session} and
-	 * {@link MtgLifeCounterGameData}.
+	 * Creates a new instance of {@link LifeCounterGame} with the provided {@link Session} and
+	 * {@link LifeCounterGameData}.
 	 * <p>
-	 * To create a new instance of {@link MtgLifeCounterGameData}, see
-	 * {@link MtgLifeCounterGameData#newInstance()}
+	 * To create a new instance of {@link LifeCounterGameData}, see
+	 * {@link LifeCounterGameData#newInstance()}
 	 * 
 	 * @param session
 	 * @param gameData
 	 * @return
-	 * @see MtgLifeCounterGameData#newInstance()
+	 * @see LifeCounterGameData#newInstance()
 	 */
-	public static MtgLifeCounterGame newInstance(Session session, MtgLifeCounterGameData gameData) {
-		MtgLifeCounterGame game = new MtgLifeCounterGame();
+	public static LifeCounterGame newInstance(Session session, LifeCounterGameData gameData) {
+		LifeCounterGame game = new LifeCounterGame();
 		game.setSession(session);
 		game.setGameData(gameData);
 		return game;
@@ -68,11 +68,11 @@ public final class MtgLifeCounterGame {
 		return session;
 	}
 
-	protected MtgLifeCounterGameData getGameData() {
+	protected LifeCounterGameData getGameData() {
 		return gameData;
 	}
 
-	protected void setGameData(MtgLifeCounterGameData gameData) {
+	protected void setGameData(LifeCounterGameData gameData) {
 		this.gameData = gameData;
 	}
 

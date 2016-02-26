@@ -1,8 +1,14 @@
 #Alexa- Life Counter for MTG
 Alexa application that keeps track of life totals in Magic: The Gathering.  By default, players start with life totals of 20.  Some example usages can be found below.
 
+## Short Description
+Alexa application that keeps track of life totals for Magic:  The Gathering(c) trading card game.
+
+## Long Description
+Alexa application that keeps track of life totals for Magic:  The Gathering(c) trading card game.  Each player is started with 20 life when initiating this application.  You can give it voice commands to add/subtract life totals from each player.  Other voice commands are supported such as adding players and resetting the game.  See examples for some voice command usages.
+
 ## Contributing & Getting a 'free' T-Shirt
-See following link on how to get a tshirt https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/content/alexa-developer-skill-promotion 
+See following link on how to get a t-shirt https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/content/alexa-developer-skill-promotion 
 
 How to contribute
 - See issues (easy documentation stuff to fix)

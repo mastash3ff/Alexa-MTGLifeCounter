@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package mtglifecounter;
+package lifecounter;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -37,16 +37,18 @@ import com.amazon.speech.ui.Reprompt;
 import com.amazon.speech.ui.SimpleCard;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 
-import mtglifecounter.database.MtgLifeCounterDao;
-import mtglifecounter.database.MtgLifeCounterDynamoDbClient;
-import mtglifecounter.database.MtgLifeCounterGame;
-import mtglifecounter.database.MtgLifeCounterGameData;
+import lifecounter.database.LifeCounterDao;
+import lifecounter.database.LifeCounterDynamoDbClient;
+import lifecounter.database.LifeCounterGame;
+import lifecounter.database.LifeCounterGameData;
 
 /**
- * The {@link MtgLifeCounterManager} receives various events and intents and manages the flow of the
+ * The {@link LifeCounterManager} receives various events and intents and manages the flow of the
  * game.
  */
-public class MtgLifeCounterManager {
+public class LifeCounterManager {
+	static final String APPLICATION_NAME = "Life Counter for MTG";
+	
     /**
      * Intent slot for player name.
      */
@@ -62,12 +64,12 @@ public class MtgLifeCounterManager {
      */
     private static final int MAX_PLAYERS_FOR_SPEECH = 3;
 
-    private final MtgLifeCounterDao mtgLifeCounterDao;
+    private final LifeCounterDao lifeCounterDao;
 
-    public MtgLifeCounterManager(final AmazonDynamoDBClient amazonDynamoDbClient) {
-        MtgLifeCounterDynamoDbClient dynamoDbClient =
-                new MtgLifeCounterDynamoDbClient(amazonDynamoDbClient);
-        mtgLifeCounterDao = new MtgLifeCounterDao(dynamoDbClient);
+    public LifeCounterManager(final AmazonDynamoDBClient amazonDynamoDbClient) {
+        LifeCounterDynamoDbClient dynamoDbClient =
+                new LifeCounterDynamoDbClient(amazonDynamoDbClient);
+        lifeCounterDao = new LifeCounterDao(dynamoDbClient);
     }
 
     /**
@@ -83,21 +85,21 @@ public class MtgLifeCounterManager {
         // Speak welcome message and ask user questions
         // based on whether there are players or not.
         String speechText, repromptText;
-        MtgLifeCounterGame game = mtgLifeCounterDao.getMtgLifeCounterGame(session);
+        LifeCounterGame game = lifeCounterDao.getLifeCounterGame(session);
 
         if (game == null || !game.hasPlayers()) {
-            speechText = "MTG Life Counter, Let's start your game. Who's your first player?";
+            speechText = APPLICATION_NAME +  ".  Let's start your game. Who's your first player?";
             repromptText = "Please tell me who is your first player?";
         } else if (!game.hasLifeTotals()) {
             speechText =
-                    "MTG Life Counter, you have " + game.getNumberOfPlayers()
+                    APPLICATION_NAME + ", you have " + game.getNumberOfPlayers()
                             + (game.getNumberOfPlayers() == 1 ? " player" : " players")
                             + " in the game. You can add or subtract life from a player, add another player,"
                             + " reset all players or exit. Which would you like?";
-            repromptText = MtgLifeCounterTextUtil.COMPLETE_HELP;
+            repromptText = LifeCounterTextUtil.COMPLETE_HELP;
         } else {
-            speechText = "MTG Life Counter, What can I do for you?";
-            repromptText = MtgLifeCounterTextUtil.NEXT_HELP;
+            speechText = APPLICATION_NAME + ", What can I do for you?";
+            repromptText = LifeCounterTextUtil.NEXT_HELP;
         }
 
         return getAskSpeechletResponse(speechText, repromptText);
@@ -109,11 +111,11 @@ public class MtgLifeCounterManager {
      * @param session
      *            {@link Session} for the request
      * @param skillContext
-     *            {@link MtgLifeCounterSkillContext} for this request
+     *            {@link LifeCounterSkillContext} for this request
      * @return response for the new game intent.
      */
-    public SpeechletResponse getNewGameIntentResponse(Session session, MtgLifeCounterSkillContext skillContext) {
-        MtgLifeCounterGame game = mtgLifeCounterDao.getMtgLifeCounterGame(session);
+    public SpeechletResponse getNewGameIntentResponse(Session session, LifeCounterSkillContext skillContext) {
+        LifeCounterGame game = lifeCounterDao.getLifeCounterGame(session);
 
         if (game == null) {
             return getAskSpeechletResponse("New game started. Who's your first player?",
@@ -122,7 +124,7 @@ public class MtgLifeCounterManager {
 
         // Reset current game
         game.resetLifeTotals(20); //default is 20
-        mtgLifeCounterDao.saveMtgLifeCounterGame(game);
+        lifeCounterDao.saveLifeCounterGame(game);
 
         String speechText =
                 "New game started with " + game.getNumberOfPlayers() + " existing player"
@@ -150,28 +152,28 @@ public class MtgLifeCounterManager {
      * @return response for the add player intent.
      */
     public SpeechletResponse getAddPlayerIntentResponse(Intent intent, Session session,
-            MtgLifeCounterSkillContext skillContext) {
+            LifeCounterSkillContext skillContext) {
         // add a player to the current game,
         // terminate or continue the conversation based on whether the intent
         // is from a one shot command or not.
         String newPlayerName =
-                MtgLifeCounterTextUtil.getPlayerName(intent.getSlot(SLOT_PLAYER_NAME).getValue());
+                LifeCounterTextUtil.getPlayerName(intent.getSlot(SLOT_PLAYER_NAME).getValue());
         if (newPlayerName == null) {
             String speechText = "OK. Who do you want to add?";
             return getAskSpeechletResponse(speechText, speechText);
         }
 
         // Load the previous game
-        MtgLifeCounterGame game = mtgLifeCounterDao.getMtgLifeCounterGame(session);
+        LifeCounterGame game = lifeCounterDao.getLifeCounterGame(session);
         if (game == null) {
-            game = MtgLifeCounterGame.newInstance(session, MtgLifeCounterGameData.newInstance());
+            game = LifeCounterGame.newInstance(session, LifeCounterGameData.newInstance());
         }
 
         game.addPlayer(newPlayerName);
         game.setLifeForPlayer(newPlayerName, 20);
 
         // Save the updated game
-        mtgLifeCounterDao.saveMtgLifeCounterGame(game);
+        lifeCounterDao.saveLifeCounterGame(game);
 
         String speechText = newPlayerName + " has joined your game. ";
         String repromptText = null;
@@ -183,7 +185,7 @@ public class MtgLifeCounterManager {
             } else {
                 speechText += "Who is your next player?";
             }
-            repromptText = MtgLifeCounterTextUtil.NEXT_HELP;
+            repromptText = LifeCounterTextUtil.NEXT_HELP;
         }
 
         if (repromptText != null) {
@@ -201,13 +203,13 @@ public class MtgLifeCounterManager {
      * @param session
      *            {@link Session} for this request
      * @param skillContext
-     *            {@link MtgLifeCounterSkillContext} for this request
+     *            {@link LifeCounterSkillContext} for this request
      * @return response for the add score intent
      */
     public SpeechletResponse getAddLifeIntentResponse(Intent intent, Session session,
-            MtgLifeCounterSkillContext skillContext) {
+            LifeCounterSkillContext skillContext) {
         String playerName =
-                MtgLifeCounterTextUtil.getPlayerName(intent.getSlot(SLOT_PLAYER_NAME).getValue());
+                LifeCounterTextUtil.getPlayerName(intent.getSlot(SLOT_PLAYER_NAME).getValue());
         if (playerName == null) {
             String speechText = "Sorry, I did not hear the player name. Please say again?";
             return getAskSpeechletResponse(speechText, speechText);
@@ -221,7 +223,7 @@ public class MtgLifeCounterManager {
             return getAskSpeechletResponse(speechText, speechText);
         }
 
-        MtgLifeCounterGame game = mtgLifeCounterDao.getMtgLifeCounterGame(session);
+        LifeCounterGame game = lifeCounterDao.getLifeCounterGame(session);
         if (game == null) {
             return getTellSpeechletResponse("A game has not been started. Please say New Game to "
                     + "start a new game before adding life.");
@@ -239,7 +241,7 @@ public class MtgLifeCounterManager {
         }
 
         // Save game
-        mtgLifeCounterDao.saveMtgLifeCounterGame(game);
+        lifeCounterDao.saveLifeCounterGame(game);
 
         // Prepare speech text. If the game has less than 3 players, skip reading scores for each
         // player for brevity.
@@ -261,12 +263,12 @@ public class MtgLifeCounterManager {
      * @param session
      *            {@link Session} for this request
      * @param skillContext
-     *            {@link MtgLifeCounterSkillContext} for this request
+     *            {@link LifeCounterSkillContext} for this request
      * @return response for the add score intent
      */
-	public SpeechletResponse getSubLifeIntentResponse(Intent intent, Session session, MtgLifeCounterSkillContext skillContext) {
+	public SpeechletResponse getSubLifeIntentResponse(Intent intent, Session session, LifeCounterSkillContext skillContext) {
         String playerName =
-                MtgLifeCounterTextUtil.getPlayerName(intent.getSlot(SLOT_PLAYER_NAME).getValue());
+                LifeCounterTextUtil.getPlayerName(intent.getSlot(SLOT_PLAYER_NAME).getValue());
         if (playerName == null) {
             String speechText = "Sorry, I did not hear the player name. Please say again?";
             return getAskSpeechletResponse(speechText, speechText);
@@ -280,7 +282,7 @@ public class MtgLifeCounterManager {
             return getAskSpeechletResponse(speechText, speechText);
         }
 
-        MtgLifeCounterGame game = mtgLifeCounterDao.getMtgLifeCounterGame(session);
+        LifeCounterGame game = lifeCounterDao.getLifeCounterGame(session);
         if (game == null) {
             return getTellSpeechletResponse("A game has not been started. Please say New Game to "
                     + "start a new game before subtracting life.");
@@ -298,7 +300,7 @@ public class MtgLifeCounterManager {
         }
         
         // Save game
-        mtgLifeCounterDao.saveMtgLifeCounterGame(game);
+        lifeCounterDao.saveLifeCounterGame(game);
         
         //check for winner & loser
         if (game.didPlayerLose(playerName,score)){
@@ -336,7 +338,7 @@ public class MtgLifeCounterManager {
      */
     public SpeechletResponse getTellLifeTotalsIntentResponse(Intent intent, Session session) {
         // tells the scores in the leaderboard and send the result in card.
-        MtgLifeCounterGame game = mtgLifeCounterDao.getMtgLifeCounterGame(session);
+        LifeCounterGame game = lifeCounterDao.getLifeCounterGame(session);
 
         if (game == null || !game.hasPlayers()) {
             return getTellSpeechletResponse("Nobody has joined the game.");
@@ -363,9 +365,9 @@ public class MtgLifeCounterManager {
      */
     public SpeechletResponse getResetPlayersIntentResponse(Intent intent, Session session) {
         // Remove all players
-        MtgLifeCounterGame game =
-                MtgLifeCounterGame.newInstance(session, MtgLifeCounterGameData.newInstance());
-        mtgLifeCounterDao.saveMtgLifeCounterGame(game);
+        LifeCounterGame game =
+                LifeCounterGame.newInstance(session, LifeCounterGameData.newInstance());
+        lifeCounterDao.saveLifeCounterGame(game);
 
         String speechText = "New game started without players. Who do you want to add first?";
         return getAskSpeechletResponse(speechText, speechText);
@@ -379,15 +381,15 @@ public class MtgLifeCounterManager {
      * @param session
      *            {@link Session} for this request
      * @param skillContext
-     *            {@link MtgLifeCounterSkillContext} for this request
+     *            {@link LifeCounterSkillContext} for this request
      * @return response for the help intent
      */
     public SpeechletResponse getHelpIntentResponse(Intent intent, Session session,
-            MtgLifeCounterSkillContext skillContext) {
+            LifeCounterSkillContext skillContext) {
         return skillContext.needsMoreHelp() ? getAskSpeechletResponse(
-                MtgLifeCounterTextUtil.COMPLETE_HELP + " So, how can I help?",
-                MtgLifeCounterTextUtil.NEXT_HELP)
-                : getTellSpeechletResponse(MtgLifeCounterTextUtil.COMPLETE_HELP);
+                LifeCounterTextUtil.COMPLETE_HELP + " So, how can I help?",
+                LifeCounterTextUtil.NEXT_HELP)
+                : getTellSpeechletResponse(LifeCounterTextUtil.COMPLETE_HELP);
     }
 
     /**
@@ -398,11 +400,11 @@ public class MtgLifeCounterManager {
      * @param session
      *            {@link Session} for this request
      * @param skillContext
-     *            {@link MtgLifeCounterSkillContext} for this request
+     *            {@link LifeCounterSkillContext} for this request
      * @return response for the exit intent
      */
     public SpeechletResponse getExitIntentResponse(Intent intent, Session session,
-            MtgLifeCounterSkillContext skillContext) {
+            LifeCounterSkillContext skillContext) {
         return skillContext.needsMoreHelp() ? getTellSpeechletResponse("Okay. Whenever you're "
                 + "ready, you can start adding or subtracting life from the players in your game.")
                 : getTellSpeechletResponse("");

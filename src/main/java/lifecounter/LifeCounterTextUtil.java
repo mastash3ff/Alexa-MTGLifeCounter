@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package mtglifecounter;
+package lifecounter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,9 +29,9 @@ import java.util.List;
 /**
  * Utililty class containing helpers for manipulating and handling text.
  */
-public final class MtgLifeCounterTextUtil {
+public final class LifeCounterTextUtil {
 
-    private MtgLifeCounterTextUtil() {
+    private LifeCounterTextUtil() {
     }
 
     /**
