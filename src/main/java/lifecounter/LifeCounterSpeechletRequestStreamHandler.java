@@ -25,7 +25,10 @@ package lifecounter;
 
 import java.util.HashSet;
 import java.util.Set;
-
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import com.amazon.speech.speechlet.lambda.SpeechletRequestStreamHandler;
 
 /**
@@ -40,11 +43,31 @@ public final class LifeCounterSpeechletRequestStreamHandler extends SpeechletReq
 
     static {
         supportedApplicationIds = new HashSet<String>();
-        //MTG Life Counter App Id
-        supportedApplicationIds.add("amzn1.echo-sdk-ams.app.c92b8a78-da3c-4b70-84c3-afbc65333da7");
     }
 
     public LifeCounterSpeechletRequestStreamHandler() {
-        super(new LifeCounterSpeechlet(), supportedApplicationIds);
+
+	Properties prop = new Properties();
+	InputStream input = null;
+
+	try{
+	    input = new FileInputStream("config.properties");
+	    prop.load(input);
+	    supportedApplicationIds.add(prop.getProperty("app_id"));
+	}
+	super(new LifeCounterSpeechlet(), supportedApplicationIds);
+	catch(IOException ex){
+	    ex.printStackTrace();
+	}
+	finally{
+	    if (input != null){
+		try{
+		    input.close();
+		}
+		catch(IOException e){
+		    e.printStackTrace();
+		}
+	    }
+	}
     }
 }
