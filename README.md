@@ -7,9 +7,6 @@ Alexa application that keeps track of life totals for Magic:  The Gathering(c) t
 ## Long Description
 Alexa application that keeps track of life totals for Magic:  The Gathering(c) trading card game.  Each player is started with 20 life when initiating this application.  You can give it voice commands to add/subtract life totals from each player.  Other voice commands are supported such as adding players and resetting the game.  See examples for some voice command usages.
 
-## Contributing & Getting a 'free' T-Shirt
-See following link on how to get a t-shirt https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/content/alexa-developer-skill-promotion 
-
 How to contribute
 - See issues (easy documentation stuff to fix)
 - Add additional documentation.
@@ -87,7 +84,7 @@ Click on CreateTable: set "MtgLifeCounterUserData" as the table name, use Hash f
 Continue the steps with the default settings to finish the setup of DynamoDB table.
 Alexa Skill Setup
 Go to the Alexa Console and click Add a New Skill.
-Set "MtgLifeCounter" as the skill name and "score keeper" as the invocation name, this is what is used to activate your skill. For example you would say: "Alexa, Ask score keeper for the current score."
+Set "MtgLifeCounter" as the skill name and "life counter" as the invocation name, this is what is used to activate your skill. For example you would say: "Alexa, Ask life counter for the current score."
 Select the Lambda ARN for the skill Endpoint and paste the ARN copied from above. Click Next.
 Copy the custom slot types from the customSlotTypes folder. Each file in the folder represents a new custom slot type. The name of the file is the name of the custom slot type, and the values in the file are the values for the custom slot.
 Copy the Intent Schema from the included IntentSchema.json.
