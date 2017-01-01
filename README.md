@@ -1,4 +1,4 @@
-#Alexa- Life Counter for MTG
+# Alexa- Life Counter for MTG
 Alexa application that keeps track of life totals in Magic: The Gathering.  By default, players start with life totals of 20.  Some example usages can be found below.
 
 ## Short Description
@@ -94,3 +94,5 @@ You are now able to start testing your sample skill! You should be able to go to
 In order to test it, try to say some of the Sample Utterances from the Examples section below.
 Your skill is now saved and once you are finished testing you can continue to publish your skill
 
+# Alexa-MTGLifeCounter
+Alexa skill app that keeps track of player life total in MTG card game.
